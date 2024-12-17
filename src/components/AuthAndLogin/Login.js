@@ -11,8 +11,6 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log('Email:', email); // Debugging line
-    console.log('Password:', password); // Debugging line
     try {
       const data = await loginUser(email, password);
       console.log('Response data:', data); // Debugging line

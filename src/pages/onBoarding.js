@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Login from '../components/AuthAndLogin/Login';
 import Register from '../components/AuthAndLogin/Register';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
-import './onboarding.css'; // Import the CSS file for additional styling
+import '../designsAndCss/onboarding.css';
 
 const Onboarding = () => {
   const [isLogin, setIsLogin] = useState(true);
