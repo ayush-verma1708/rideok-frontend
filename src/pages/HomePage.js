@@ -8,7 +8,6 @@ const HomePage = () => {
     <div className='container'>
       <h1>Welcome to RideOk</h1>
       {user && <h2>Hello, {user.name}!</h2>}
-      <LocationBlock />
     </div>
   );
 };
