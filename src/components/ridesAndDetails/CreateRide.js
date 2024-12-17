@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Alert, Spinner } from 'react-bootstrap';
+import { Button, Form, Alert, Spinner, Container } from 'react-bootstrap';
 import { createRide } from '../../api/rideApi';
 import AutocompleteSearch from '../generalComponents/locationBlock.js'; // Import the AutocompleteSearch component
 import axios from 'axios';
@@ -158,31 +158,6 @@ const CreateRide = () => {
     setPriceEstimate(estimatedPriceINR.toFixed(2)); // Set price in INR
   };
 
-  // Handle form submission
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setErrorMessage('');
-  //   setSuccessMessage('');
-  //   setIsLoading(true);
-
-  //   try {
-  //     // Add the price to rideData
-  //     const { startCoords, endCoords, ...rideToCreate } = {
-  //       ...rideData,
-  //       price: priceEstimate, // Include the calculated price
-  //       startLocation: rideData.startLocation, // Ensure startLocation is included
-  //       endLocation: rideData.endLocation, // Ensure endLocation is included
-  //     };
-
-  //     console.log(rideToCreate);
-  //     const newRide = await createRide(rideToCreate);
-  //     setIsLoading(false);
-  //     setSuccessMessage('Ride created successfully!');
-  //   } catch (error) {
-  //     setIsLoading(false);
-  //     setErrorMessage(error.message || 'An unexpected error occurred');
-  //   }
-  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
@@ -268,21 +243,21 @@ const CreateRide = () => {
             min='1'
           />
         </Form.Group>
+        <Container className='mt-3'>
+          {/* Distance */}
+          {distance && !isLoading && (
+            <div>
+              <strong>Distance:</strong> {distance} km
+            </div>
+          )}
 
-        {/* Distance */}
-        {distance && !isLoading && (
-          <div>
-            <strong>Distance:</strong> {distance} km
-          </div>
-        )}
-
-        {/* Price Estimate in INR */}
-        {priceEstimate && !isLoading && (
-          <div>
-            <strong>Price Estimate:</strong> ₹{priceEstimate}
-          </div>
-        )}
-
+          {/* Price Estimate in INR */}
+          {priceEstimate && !isLoading && (
+            <div>
+              <strong>Cost Estimate:</strong> ₹{priceEstimate}
+            </div>
+          )}
+        </Container>
         {isLoading && <Spinner animation='border' />}
 
         {/* Submit Button */}

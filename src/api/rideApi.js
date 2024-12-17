@@ -72,3 +72,15 @@ export const getAllRides = async () => {
   const response = await axios.get(`${API_URL}`);
   return response.data;
 };
+
+// 8. Get My Rides
+export const getMyRides = async () => {
+  const response = await axios.get(`${API_URL}/user-rides`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+  console.log(response.data);
+  return response.data;
+};
