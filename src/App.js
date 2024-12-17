@@ -1,15 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Header from './components/Header';
-import Onboarding from './components/onBoarding.js';
-import HomePage from './pages/HomePage';
+import Header from './components/generalComponents/Header.js';
+import HomePage from './pages/HomePage.js';
+import Onboarding from './pages/onBoarding.js';
 
 const App = () => {
   return (
     <Router>
       <Header />
       <Routes>
-        <Route path='/on-boarding' element={<Onboarding />} />
+        <Route path='/onboarding' element={<Onboarding />} />
         <Route path='/' element={<HomePage />} />
       </Routes>
     </Router>

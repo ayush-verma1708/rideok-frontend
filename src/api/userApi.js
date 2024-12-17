@@ -1,19 +1,11 @@
 import axios from 'axios';
 
 // Base URL for API requests
-const baseURL = 'http://localhost:5000/api';
-
-// Create a pre-configured Axios instance
-const axiosInstance = axios.create({
-  baseURL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+const API_URL = 'http://localhost:5000/api';
 
 // 1. Login User
 export const loginUser = async (email, password) => {
-  const response = await axiosInstance.post('/users/login', {
+  const response = await axios.post(`${API_URL}/users/login`, {
     email,
     password,
   });
@@ -22,13 +14,13 @@ export const loginUser = async (email, password) => {
 
 // 2. Register User
 export const registerUser = async (userData) => {
-  const response = await axiosInstance.post('/users/register', userData);
+  const response = await axios.post(`${API_URL}/users/register`, userData);
   return response.data;
 };
 
 // 3. Get User Profile
 export const getUserProfile = async (token) => {
-  const response = await axiosInstance.get('/users/me', {
+  const response = await axios.get(`${API_URL}/users/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -38,7 +30,7 @@ export const getUserProfile = async (token) => {
 
 // 4. Update User Profile
 export const updateUserProfile = async (token, updatedData) => {
-  const response = await axiosInstance.put('/users/profile', updatedData, {
+  const response = await axios.put(`${API_URL}/users/profile`, updatedData, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -48,7 +40,7 @@ export const updateUserProfile = async (token, updatedData) => {
 
 // 5. Delete User
 export const deleteUser = async (token) => {
-  const response = await axiosInstance.delete('/users/profile', {
+  const response = await axios.delete(`${API_URL}/users/profile`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

@@ -1,0 +1,68 @@
+/* Background for onboarding page */
+.onboarding-background {
+  background: linear-gradient(135deg, #f5f5f5, #ffffff);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Onboarding title */
+.onboarding-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Onboarding subtitle */
+.onboarding-subtitle {
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: #777;
+}
+
+/* Card styling */
+.onboarding-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.onboarding-card:hover {
+  transform: translateY(-10px);
+}
+
+/* Styling for buttons */
+.onboarding-button {
+  width: 120px;
+  height: 45px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.onboarding-button:focus {
+  box-shadow: none;
+}
+
+.onboarding-button:active {
+  transform: scale(0.98);
+}
+
+/* Responsive styling for mobile devices */
+@media (max-width: 768px) {
+  .onboarding-card {
+    padding: 20px;
+  }
+
+  .onboarding-title {
+    font-size: 2rem;
+  }
+
+  .onboarding-subtitle {
+    font-size: 1.1rem;
+  }
+}
