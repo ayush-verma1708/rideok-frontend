@@ -6,7 +6,6 @@ import SearchRides from '../components/ridesAndDetails/SearchRides.js';
 import UpdateRide from '../components/ridesAndDetails/UpdateRide.js';
 import DeleteRide from '../components/ridesAndDetails/DeleteRide.js';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import LocationBlock from '../components/generalComponents/locationBlock.js';
 
 const RideManagementPage = () => {
   const [selectedRideId, setSelectedRideId] = useState(null);
@@ -30,16 +29,7 @@ const RideManagementPage = () => {
           <Card>
             <Card.Header>My Rides</Card.Header>
             <Card.Body>
-              <MyRides />
-            </Card.Body>
-          </Card>
-        </Col>
-
-        <Col md={4}>
-          <Card>
-            <Card.Header>Search for Rides</Card.Header>
-            <Card.Body>
-              <SearchRides onRideSelect={handleRideSelection} />
+              <MyRides onRideSelect={handleRideSelection} />
             </Card.Body>
           </Card>
         </Col>
@@ -57,6 +47,15 @@ const RideManagementPage = () => {
           </Card>
         </Col>
       </Row>
+
+      <Col md={7}>
+        <Card>
+          <Card.Header>Search for Rides</Card.Header>
+          <Card.Body>
+            <SearchRides onRideSelect={handleRideSelection} />
+          </Card.Body>
+        </Card>
+      </Col>
 
       <Row className='mt-4'>
         <Col md={6}>

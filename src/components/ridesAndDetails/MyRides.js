@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getMyRides } from '../../api/rideApi.js'; // Assuming the API functions are in a separate file
+import { Button } from 'react-bootstrap';
 
-const MyRides = () => {
+const MyRides = ({ onRideSelect }) => {
   const [rides, setRides] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,6 +31,11 @@ const MyRides = () => {
   if (error) {
     return <div style={{ color: 'red' }}>{error}</div>;
   }
+
+  const handleRideSelection = (rideId) => {
+    console.log(rideId);
+    onRideSelect(rideId); // Call the parent handler
+  };
 
   return (
     <div style={{ padding: '20px' }}>
@@ -98,6 +104,24 @@ const MyRides = () => {
                 >
                   {ride.availableSeats > 0 ? 'Available' : 'Fully Booked'}
                 </span>
+              </div>
+
+              {/* Select Ride Button */}
+              <div style={{ marginTop: '15px' }}>
+                <Button
+                  variant='primary'
+                  onClick={() => handleRideSelection(ride._id)}
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    backgroundColor: '#2196F3',
+                    borderColor: '#2196F3',
+                    color: 'white',
+                  }}
+                >
+                  Select Ride
+                </Button>
               </div>
             </div>
           ))}

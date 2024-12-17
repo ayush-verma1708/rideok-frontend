@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAllRides, bookRide, searchRides } from '../../api/rideApi';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Row, Col, Card } from 'react-bootstrap';
 
 const SearchRides = () => {
   const [searchData, setSearchData] = useState({
@@ -10,6 +10,7 @@ const SearchRides = () => {
   const [rides, setRides] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // Handle input change for search
   const handleChange = (e) => {
     setSearchData({
       ...searchData,
@@ -17,18 +18,12 @@ const SearchRides = () => {
     });
   };
 
+  // Handle search submit
   const handleSearch = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      // If no startLocation or endLocation is provided, fetch all rides
-      let foundRides;
-      // if (!searchData.startLocation && !searchData.endLocation) {
-      //   foundRides = await getAllRides();
-      // } else {
-      //   );
-      // }
-      foundRides = await searchRides(
+      let foundRides = await searchRides(
         searchData.startLocation,
         searchData.endLocation
       );
@@ -41,57 +36,86 @@ const SearchRides = () => {
   };
 
   return (
-    <div>
+    <div className='search-rides-container'>
       <h3>Search for Rides</h3>
+
+      {/* Search Form */}
       <Form onSubmit={handleSearch}>
-        <Form.Group controlId='startLocation'>
-          <Form.Label>Start Location</Form.Label>
-          <Form.Control
-            type='text'
-            name='startLocation'
-            value={searchData.startLocation}
-            onChange={handleChange}
-            placeholder='Enter starting location'
-          />
-        </Form.Group>
+        <Row>
+          <Col md={5}>
+            <Form.Group controlId='startLocation'>
+              <Form.Label>Start Location</Form.Label>
+              <Form.Control
+                type='text'
+                name='startLocation'
+                value={searchData.startLocation}
+                onChange={handleChange}
+                placeholder='Enter starting location'
+              />
+            </Form.Group>
+          </Col>
 
-        <Form.Group controlId='endLocation'>
-          <Form.Label>End Location</Form.Label>
-          <Form.Control
-            type='text'
-            name='endLocation'
-            value={searchData.endLocation}
-            onChange={handleChange}
-            placeholder='Enter destination location'
-          />
-        </Form.Group>
+          <Col md={5}>
+            <Form.Group controlId='endLocation'>
+              <Form.Label>End Location</Form.Label>
+              <Form.Control
+                type='text'
+                name='endLocation'
+                value={searchData.endLocation}
+                onChange={handleChange}
+                placeholder='Enter destination location'
+              />
+            </Form.Group>
+          </Col>
 
-        <Button type='submit' variant='primary'>
-          Search Rides
-        </Button>
+          <Col md={2}>
+            <Button type='submit' variant='primary' className='mt-4'>
+              Search Rides
+            </Button>
+          </Col>
+        </Row>
       </Form>
 
-      {loading && <p>Loading...</p>}
+      {/* Loading Indicator */}
+      {loading && <p>Loading available rides...</p>}
 
-      <div>
+      {/* Display Available Rides */}
+      <div className='available-rides'>
         <h4>Available Rides</h4>
         {rides.length > 0 ? (
-          <ul>
+          <Row>
             {rides.map((ride) => (
-              <li key={ride._id}>
-                {ride.startLocation} to {ride.endLocation} on {ride.rideDate}
-                <Button
-                  onClick={() => bookRide(ride._id)}
-                  variant='success'
-                  className='ml-2'
-                >
-                  Book
-                </Button>
-              </li>
+              <Col key={ride._id} md={4}>
+                <Card className='ride-card'>
+                  <Card.Body>
+                    <Card.Title>
+                      {ride.startLocation} to {ride.endLocation}
+                    </Card.Title>
+                    <Card.Text>
+                      <strong>Date:</strong>{' '}
+                      {new Date(ride.rideDate).toLocaleDateString()}
+                      <br />
+                      <strong>Time:</strong>{' '}
+                      {new Date(ride.rideTime).toLocaleTimeString()}
+                      <br />
+                      <strong>Available Seats:</strong> {ride.availableSeats}
+                      <br />
+                      <strong>Price:</strong> ₹{ride.price}
+                    </Card.Text>
+                    <Button
+                      onClick={() => bookRide(ride._id)}
+                      variant='success'
+                      className='mt-2'
+                    >
+                      Book Ride
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </Col>
             ))}
-          </ul>
+          </Row>
         ) : (
-          <p>No rides found</p>
+          <p>No rides found that match your search.</p>
         )}
       </div>
     </div>
@@ -100,7 +124,7 @@ const SearchRides = () => {
 
 export default SearchRides;
 
-// import React, { useEffect, useState } from 'react';
+// import React, { useState, useEffect } from 'react';
 // import { getAllRides, bookRide, searchRides } from '../../api/rideApi';
 // import { Button, Form } from 'react-bootstrap';
 
@@ -110,6 +134,7 @@ export default SearchRides;
 //     endLocation: '',
 //   });
 //   const [rides, setRides] = useState([]);
+//   const [loading, setLoading] = useState(false);
 
 //   const handleChange = (e) => {
 //     setSearchData({
@@ -120,14 +145,19 @@ export default SearchRides;
 
 //   const handleSearch = async (e) => {
 //     e.preventDefault();
+//     setLoading(true);
 //     try {
-//       const foundRides = await searchRides(
+//       let foundRides;
+
+//       foundRides = await searchRides(
 //         searchData.startLocation,
 //         searchData.endLocation
 //       );
 //       setRides(foundRides);
 //     } catch (error) {
 //       console.error('Error searching for rides:', error);
+//     } finally {
+//       setLoading(false);
 //     }
 //   };
 
@@ -142,7 +172,7 @@ export default SearchRides;
 //             name='startLocation'
 //             value={searchData.startLocation}
 //             onChange={handleChange}
-//             required
+//             placeholder='Enter starting location'
 //           />
 //         </Form.Group>
 
@@ -153,7 +183,7 @@ export default SearchRides;
 //             name='endLocation'
 //             value={searchData.endLocation}
 //             onChange={handleChange}
-//             required
+//             placeholder='Enter destination location'
 //           />
 //         </Form.Group>
 
@@ -162,6 +192,8 @@ export default SearchRides;
 //         </Button>
 //       </Form>
 
+//       {loading && <p>Loading...</p>}
+
 //       <div>
 //         <h4>Available Rides</h4>
 //         {rides.length > 0 ? (
@@ -169,7 +201,13 @@ export default SearchRides;
 //             {rides.map((ride) => (
 //               <li key={ride._id}>
 //                 {ride.startLocation} to {ride.endLocation} on {ride.rideDate}
-//                 <Button onClick={() => bookRide(ride._id)}>Book</Button>
+//                 <Button
+//                   onClick={() => bookRide(ride._id)}
+//                   variant='success'
+//                   className='ml-2'
+//                 >
+//                   Book
+//                 </Button>
 //               </li>
 //             ))}
 //           </ul>
