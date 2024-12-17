@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { createRide } from '../../api/rideApi';
 import { Button, Form, Alert, Spinner } from 'react-bootstrap';
 import Autosuggest from 'react-autosuggest';
-import { getLocationData } from '../../services/geoLocationApi'; // Use the getLocationData API function
 import debounce from 'lodash.debounce';
+import { createRide } from '../../api/rideApi';
+import { getLocationData } from '../../services/geoLocationApi'; // Use the getLocationData API function
 
 const CreateRide = () => {
   const [rideData, setRideData] = useState({

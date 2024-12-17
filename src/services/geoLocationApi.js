@@ -19,10 +19,15 @@ export const getLocationData = async (query, retries = 3) => {
         redirect: 'follow',
       };
 
+      // const response = await fetch(
+      //   `https://TrueWay-Places-API.proxy-production.allthingsdev.co/PlacesService/FindPlaceByText?text=${query}&language=en&bounds=`,
+      //   requestOptions
+      // );
       const response = await fetch(
-        `https://TrueWay-Places-API.proxy-production.allthingsdev.co/PlacesService/FindPlaceByText?text=${query}&language=en&bounds=`,
+        `https://TrueWay-Places-API.proxy-production.allthingsdev.co/PlacesService/FindPlaceByText?text=${query}&language=en`, // Remove bounds or provide valid bounds
         requestOptions
       );
+
       const data = await response.json();
       console.log(data);
       return data.results || [];

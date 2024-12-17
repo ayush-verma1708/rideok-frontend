@@ -5,6 +5,7 @@ import SearchRides from '../components/ridesAndDetails/SearchRides.js';
 import UpdateRide from '../components/ridesAndDetails/UpdateRide.js';
 import DeleteRide from '../components/ridesAndDetails/DeleteRide.js';
 import { Container, Row, Col, Card } from 'react-bootstrap';
+import LocationBlock from '../components/generalComponents/locationBlock.js';
 
 const RideManagementPage = () => {
   const [selectedRideId, setSelectedRideId] = useState(null);
