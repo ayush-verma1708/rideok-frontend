@@ -85,7 +85,7 @@ const SearchRides = () => {
         {rides.length > 0 ? (
           <Row>
             {rides.map((ride) => (
-              <Col key={ride._id} md={4}>
+              <Col key={ride._id} md={10}>
                 <Card className='ride-card'>
                   <Card.Body>
                     <Card.Title>

@@ -1,5 +1,4 @@
 import React from 'react';
-import LocationBlock from '../components/generalComponents/locationBlock';
 
 const HomePage = () => {
   const user = JSON.parse(localStorage.getItem('user'));

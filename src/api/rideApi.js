@@ -63,7 +63,7 @@ export const deleteRide = async (rideId) => {
 
 // 6. Get Ride Details
 export const getRideDetails = async (rideId) => {
-  const response = await axios.get(`${API_URL}/${rideId}`);
+  const response = await axios.get(`${API_URL}/rideId/${rideId}`);
   return response.data;
 };
 
