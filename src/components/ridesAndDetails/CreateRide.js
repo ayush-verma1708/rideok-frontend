@@ -147,6 +147,26 @@ const CreateRide = () => {
     }
   };
 
+  // Get current date and time
+  const getCurrentDate = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1; // Months are 0-based
+    const day = currentDate.getDate();
+    return `${year}-${month < 10 ? '0' + month : month}-${
+      day < 10 ? '0' + day : day
+    }`;
+  };
+
+  const getCurrentTime = () => {
+    const currentDate = new Date();
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    return `${hours < 10 ? '0' + hours : hours}:${
+      minutes < 10 ? '0' + minutes : minutes
+    }`;
+  };
+
   useEffect(() => {
     if (rideData.startCoords && rideData.endCoords) {
       calculateDistance();
@@ -178,7 +198,7 @@ const CreateRide = () => {
           />
         </Form.Group>
 
-        <Form.Group controlId='rideDate'>
+        {/* <Form.Group controlId='rideDate'>
           <Form.Label>Ride Date</Form.Label>
           <Form.Control
             type='date'
@@ -195,6 +215,34 @@ const CreateRide = () => {
             name='rideTime'
             onChange={handleChange}
             required
+          />
+        </Form.Group> */}
+        <Form.Group controlId='rideDate'>
+          <Form.Label>Ride Date</Form.Label>
+          <Form.Control
+            type='date'
+            name='rideDate'
+            value={rideData.rideDate}
+            onChange={handleChange}
+            required
+            min={getCurrentDate()} // Prevent selecting past dates
+          />
+        </Form.Group>
+
+        {/* Ride Time */}
+        <Form.Group controlId='rideTime'>
+          <Form.Label>Ride Time</Form.Label>
+          <Form.Control
+            type='time'
+            name='rideTime'
+            value={rideData.rideTime}
+            onChange={handleChange}
+            required
+            min={
+              rideData.rideDate === getCurrentDate()
+                ? getCurrentTime()
+                : '00:00'
+            } // Allow only future time if today's date is selected
           />
         </Form.Group>
 
