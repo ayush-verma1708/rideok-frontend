@@ -175,7 +175,6 @@ const CreateRide = () => {
 
   return (
     <div>
-      <h3>Create a Ride</h3>
       {successMessage && <Alert variant='success'>{successMessage}</Alert>}
       {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
 

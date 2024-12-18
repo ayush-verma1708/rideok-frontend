@@ -81,6 +81,5 @@ export const getMyRides = async () => {
       Authorization: `Bearer ${getToken()}`,
     },
   });
-  console.log(response.data);
   return response.data;
 };

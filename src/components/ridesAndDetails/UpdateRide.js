@@ -1,190 +1,3 @@
-// import React, { useState, useEffect } from 'react';
-// import { getRideDetails, updateRide } from '../../api/rideApi';
-// import AutocompleteSearch from '../generalComponents/locationBlock.js';
-// import axios from 'axios';
-
-// const UpdateRide = ({ rideId }) => {
-//   const [rideData, setRideData] = useState({
-//     startLocation: '',
-//     endLocation: '',
-//     rideDate: '',
-//     rideTime: '',
-//     availableSeats: 1,
-//     startCoords: null,
-//     endCoords: null,
-//   });
-
-//   const [errorMessage, setErrorMessage] = useState('');
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [successMessage, setSuccessMessage] = useState('');
-//   const [distance, setDistance] = useState(null);
-//   const [priceEstimate, setPriceEstimate] = useState(null);
-
-//   const baseFarePerKm = 13; // ₹13 per km
-
-//   const fetchRideDetails = async () => {
-//     try {
-//       const response = await getRideDetails(rideId);
-//       setRideData({
-//         ...response,
-//         rideDate: response.rideDate.split('T')[0], // Extract date from ISO format
-//         rideTime: response.rideTime.split('T')[1].split('.')[0], // Extract time
-//       });
-//     } catch (error) {
-//       setErrorMessage('Error fetching ride details.');
-//     }
-//   };
-
-//   const handleChange = (e) => {
-//     setRideData({ ...rideData, [e.target.name]: e.target.value });
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     setErrorMessage('');
-//     setSuccessMessage('');
-//     setIsLoading(true);
-
-//     try {
-//       await updateRide(rideId, rideData);
-//       setIsLoading(false);
-//       setSuccessMessage('Ride updated successfully!');
-//     } catch (error) {
-//       setIsLoading(false);
-//       setErrorMessage('An unexpected error occurred.');
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchRideDetails();
-//   }, [rideId]);
-
-//   return (
-//     <div className='container py-5'>
-//       <h3 className='text-center mb-4'>Update Ride</h3>
-//       {successMessage && <Alert variant='success'>{successMessage}</Alert>}
-//       {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
-
-//       <Card className='shadow-sm'>
-//         <Card.Body>
-//           <Form onSubmit={handleSubmit}>
-//             <Row>
-//               <Col md={6}>
-//                 {/* Start Location */}
-//                 <Form.Group controlId='startLocation'>
-//                   <Form.Label>Start Location</Form.Label>
-//                   <AutocompleteSearch
-//                     fieldName='startLocation'
-//                     value={rideData.startLocation}
-//                     onSelectLocation={(value) =>
-//                       setRideData({ ...rideData, startLocation: value })
-//                     }
-//                   />
-//                 </Form.Group>
-//               </Col>
-//               <Col md={6}>
-//                 {/* End Location */}
-//                 <Form.Group controlId='endLocation'>
-//                   <Form.Label>End Location</Form.Label>
-//                   <AutocompleteSearch
-//                     fieldName='endLocation'
-//                     value={rideData.endLocation}
-//                     onSelectLocation={(value) =>
-//                       setRideData({ ...rideData, endLocation: value })
-//                     }
-//                   />
-//                 </Form.Group>
-//               </Col>
-//             </Row>
-
-//             {/* Original Locations */}
-//             <Row>
-//               <Col md={6}>
-//                 <Form.Group controlId='originalStartLocation'>
-//                   <Form.Label>Original Start Location</Form.Label>
-//                   <Form.Control
-//                     type='text'
-//                     value={rideData.startLocation}
-//                     disabled
-//                     className='bg-light'
-//                   />
-//                 </Form.Group>
-//               </Col>
-//               <Col md={6}>
-//                 <Form.Group controlId='originalEndLocation'>
-//                   <Form.Label>Original End Location</Form.Label>
-//                   <Form.Control
-//                     type='text'
-//                     value={rideData.endLocation}
-//                     disabled
-//                     className='bg-light'
-//                   />
-//                 </Form.Group>
-//               </Col>
-//             </Row>
-
-//             {/* Ride Date and Time */}
-//             <Row>
-//               <Col md={6}>
-//                 <Form.Group controlId='rideDate'>
-//                   <Form.Label>Ride Date</Form.Label>
-//                   <Form.Control
-//                     type='date'
-//                     name='rideDate'
-//                     value={rideData.rideDate}
-//                     onChange={handleChange}
-//                     required
-//                     min={new Date().toISOString().split('T')[0]} // Prevent selecting past dates
-//                   />
-//                 </Form.Group>
-//               </Col>
-//               <Col md={6}>
-//                 <Form.Group controlId='rideTime'>
-//                   <Form.Label>Ride Time</Form.Label>
-//                   <Form.Control
-//                     type='time'
-//                     name='rideTime'
-//                     value={rideData.rideTime}
-//                     onChange={handleChange}
-//                     required
-//                   />
-//                 </Form.Group>
-//               </Col>
-//             </Row>
-
-//             {/* Available Seats */}
-//             <Form.Group controlId='availableSeats'>
-//               <Form.Label>Seats Available</Form.Label>
-//               <Form.Control
-//                 type='number'
-//                 name='availableSeats'
-//                 min='1'
-//                 value={rideData.availableSeats}
-//                 onChange={handleChange}
-//               />
-//             </Form.Group>
-
-//             {/* Distance and Price Estimate */}
-//             {distance && <p>Distance: {distance} km</p>}
-//             {priceEstimate && <p>Price Estimate: ₹{priceEstimate}</p>}
-
-//             {/* Submit Button */}
-//             {isLoading ? (
-//               <Spinner animation='border' />
-//             ) : (
-//               <Button type='submit' variant='primary' className='w-100 mt-3'>
-//                 Update Ride
-//               </Button>
-//             )}
-//           </Form>
-//         </Card.Body>
-//       </Card>
-//     </div>
-//   );
-// };
-
-// export default UpdateRide;
-
 import React, { useState, useEffect } from 'react';
 // import { Button, Form, Alert, Spinner } from 'react-bootstrap';
 import { Button, Form, Alert, Spinner, Row, Col, Card } from 'react-bootstrap';
@@ -499,85 +312,273 @@ const UpdateRide = ({ rideId }) => {
         </Card.Body>
       </Card>
     </div>
-    // <div>
-    //   <h3>Update Ride</h3>
-    //   {successMessage && <Alert variant='success'>{successMessage}</Alert>}
-    //   {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
-
-    //   <Form onSubmit={handleSubmit}>
-    //     <Form.Group controlId='startLocation'>
-    //       <Form.Label>Start Location</Form.Label>
-    //       <AutocompleteSearch
-    //         fieldName='startLocation'
-    //         value={rideData.startLocation}
-    //         onSelectLocation={handleSelectLocation}
-    //       />
-    //     </Form.Group>
-
-    //     <Form.Group controlId='endLocation'>
-    //       <Form.Control disabled value={rideData.endLocation} />
-    //       <Form.Control disabled value={rideData.startLocation} />
-    //     </Form.Group>
-
-    //     <Form.Group controlId='endLocation'>
-    //       <Form.Label>End Location</Form.Label>
-    //       <AutocompleteSearch
-    //         fieldName='endLocation'
-    //         value={rideData.endLocation}
-    //         onSelectLocation={handleSelectLocation}
-    //       />
-    //     </Form.Group>
-
-    //     <Form.Group controlId='rideDate'>
-    //       <Form.Label>Ride Date</Form.Label>
-    //       <Form.Control
-    //         type='date'
-    //         name='rideDate'
-    //         value={rideData.rideDate}
-    //         onChange={handleChange}
-    //         required
-    //         min={getCurrentDate()} // Prevent selecting past dates
-    //       />
-    //     </Form.Group>
-
-    //     {/* Ride Time */}
-    //     <Form.Group controlId='rideTime'>
-    //       <Form.Label>Ride Time</Form.Label>
-    //       <Form.Control
-    //         type='time'
-    //         name='rideTime'
-    //         value={rideData.rideTime}
-    //         onChange={handleChange}
-    //         required
-    //         min={
-    //           rideData.rideDate === getCurrentDate()
-    //             ? getCurrentTime()
-    //             : '00:00'
-    //         }
-    //       />
-    //     </Form.Group>
-
-    //     <Form.Group controlId='availableSeats'>
-    //       <Form.Label>Seats Available</Form.Label>
-    //       <Form.Control
-    //         type='number'
-    //         name='availableSeats'
-    //         min='1'
-    //         value={rideData.availableSeats}
-    //         onChange={handleChange}
-    //       />
-    //     </Form.Group>
-
-    //     {distance && <p>Distance: {distance} km</p>}
-    //     {priceEstimate && <p>Price Estimate: ₹{priceEstimate}</p>}
-    //     {isLoading && <Spinner animation='border' />}
-
-    //     <Button type='submit' variant='primary' disabled={isLoading}>
-    //       {isLoading ? 'Updating...' : 'Update Ride'}
-    //     </Button>
-    //   </Form>
-    // </div>
   );
 };
 
 export default UpdateRide;
+
+// import React, { useState, useEffect } from 'react';
+// import { getRideDetails, updateRide } from '../../api/rideApi';
+// import AutocompleteSearch from '../generalComponents/locationBlock.js';
+// import axios from 'axios';
+
+// const UpdateRide = ({ rideId }) => {
+//   const [rideData, setRideData] = useState({
+//     startLocation: '',
+//     endLocation: '',
+//     rideDate: '',
+//     rideTime: '',
+//     availableSeats: 1,
+//     startCoords: null,
+//     endCoords: null,
+//   });
+
+//   const [errorMessage, setErrorMessage] = useState('');
+//   const [isLoading, setIsLoading] = useState(false);
+//   const [successMessage, setSuccessMessage] = useState('');
+//   const [distance, setDistance] = useState(null);
+//   const [priceEstimate, setPriceEstimate] = useState(null);
+
+//   const baseFarePerKm = 13; // ₹13 per km
+
+//   const fetchRideDetails = async () => {
+//     try {
+//       const response = await getRideDetails(rideId);
+//       setRideData({
+//         ...response,
+//         rideDate: response.rideDate.split('T')[0], // Extract date from ISO format
+//         rideTime: response.rideTime.split('T')[1].split('.')[0], // Extract time
+//       });
+//     } catch (error) {
+//       setErrorMessage('Error fetching ride details.');
+//     }
+//   };
+
+//   const handleChange = (e) => {
+//     setRideData({ ...rideData, [e.target.name]: e.target.value });
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setErrorMessage('');
+//     setSuccessMessage('');
+//     setIsLoading(true);
+
+//     try {
+//       await updateRide(rideId, rideData);
+//       setIsLoading(false);
+//       setSuccessMessage('Ride updated successfully!');
+//     } catch (error) {
+//       setIsLoading(false);
+//       setErrorMessage('An unexpected error occurred.');
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchRideDetails();
+//   }, [rideId]);
+
+//   return (
+//     <div className='container py-5'>
+//       <h3 className='text-center mb-4'>Update Ride</h3>
+//       {successMessage && <Alert variant='success'>{successMessage}</Alert>}
+//       {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
+
+//       <Card className='shadow-sm'>
+//         <Card.Body>
+//           <Form onSubmit={handleSubmit}>
+//             <Row>
+//               <Col md={6}>
+//                 {/* Start Location */}
+//                 <Form.Group controlId='startLocation'>
+//                   <Form.Label>Start Location</Form.Label>
+//                   <AutocompleteSearch
+//                     fieldName='startLocation'
+//                     value={rideData.startLocation}
+//                     onSelectLocation={(value) =>
+//                       setRideData({ ...rideData, startLocation: value })
+//                     }
+//                   />
+//                 </Form.Group>
+//               </Col>
+//               <Col md={6}>
+//                 {/* End Location */}
+//                 <Form.Group controlId='endLocation'>
+//                   <Form.Label>End Location</Form.Label>
+//                   <AutocompleteSearch
+//                     fieldName='endLocation'
+//                     value={rideData.endLocation}
+//                     onSelectLocation={(value) =>
+//                       setRideData({ ...rideData, endLocation: value })
+//                     }
+//                   />
+//                 </Form.Group>
+//               </Col>
+//             </Row>
+
+//             {/* Original Locations */}
+//             <Row>
+//               <Col md={6}>
+//                 <Form.Group controlId='originalStartLocation'>
+//                   <Form.Label>Original Start Location</Form.Label>
+//                   <Form.Control
+//                     type='text'
+//                     value={rideData.startLocation}
+//                     disabled
+//                     className='bg-light'
+//                   />
+//                 </Form.Group>
+//               </Col>
+//               <Col md={6}>
+//                 <Form.Group controlId='originalEndLocation'>
+//                   <Form.Label>Original End Location</Form.Label>
+//                   <Form.Control
+//                     type='text'
+//                     value={rideData.endLocation}
+//                     disabled
+//                     className='bg-light'
+//                   />
+//                 </Form.Group>
+//               </Col>
+//             </Row>
+
+//             {/* Ride Date and Time */}
+//             <Row>
+//               <Col md={6}>
+//                 <Form.Group controlId='rideDate'>
+//                   <Form.Label>Ride Date</Form.Label>
+//                   <Form.Control
+//                     type='date'
+//                     name='rideDate'
+//                     value={rideData.rideDate}
+//                     onChange={handleChange}
+//                     required
+//                     min={new Date().toISOString().split('T')[0]} // Prevent selecting past dates
+//                   />
+//                 </Form.Group>
+//               </Col>
+//               <Col md={6}>
+//                 <Form.Group controlId='rideTime'>
+//                   <Form.Label>Ride Time</Form.Label>
+//                   <Form.Control
+//                     type='time'
+//                     name='rideTime'
+//                     value={rideData.rideTime}
+//                     onChange={handleChange}
+//                     required
+//                   />
+//                 </Form.Group>
+//               </Col>
+//             </Row>
+
+//             {/* Available Seats */}
+//             <Form.Group controlId='availableSeats'>
+//               <Form.Label>Seats Available</Form.Label>
+//               <Form.Control
+//                 type='number'
+//                 name='availableSeats'
+//                 min='1'
+//                 value={rideData.availableSeats}
+//                 onChange={handleChange}
+//               />
+//             </Form.Group>
+
+//             {/* Distance and Price Estimate */}
+//             {distance && <p>Distance: {distance} km</p>}
+//             {priceEstimate && <p>Price Estimate: ₹{priceEstimate}</p>}
+
+//             {/* Submit Button */}
+//             {isLoading ? (
+//               <Spinner animation='border' />
+//             ) : (
+//               <Button type='submit' variant='primary' className='w-100 mt-3'>
+//                 Update Ride
+//               </Button>
+//             )}
+//           </Form>
+//         </Card.Body>
+//       </Card>
+//     </div>
+//   );
+// };
+
+// export default UpdateRide;
+
+// <div>
+//   <h3>Update Ride</h3>
+//   {successMessage && <Alert variant='success'>{successMessage}</Alert>}
+//   {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
+
+//   <Form onSubmit={handleSubmit}>
+//     <Form.Group controlId='startLocation'>
+//       <Form.Label>Start Location</Form.Label>
+//       <AutocompleteSearch
+//         fieldName='startLocation'
+//         value={rideData.startLocation}
+//         onSelectLocation={handleSelectLocation}
+//       />
+//     </Form.Group>
+
+//     <Form.Group controlId='endLocation'>
+//       <Form.Control disabled value={rideData.endLocation} />
+//       <Form.Control disabled value={rideData.startLocation} />
+//     </Form.Group>
+
+//     <Form.Group controlId='endLocation'>
+//       <Form.Label>End Location</Form.Label>
+//       <AutocompleteSearch
+//         fieldName='endLocation'
+//         value={rideData.endLocation}
+//         onSelectLocation={handleSelectLocation}
+//       />
+//     </Form.Group>
+
+//     <Form.Group controlId='rideDate'>
+//       <Form.Label>Ride Date</Form.Label>
+//       <Form.Control
+//         type='date'
+//         name='rideDate'
+//         value={rideData.rideDate}
+//         onChange={handleChange}
+//         required
+//         min={getCurrentDate()} // Prevent selecting past dates
+//       />
+//     </Form.Group>
+
+//     {/* Ride Time */}
+//     <Form.Group controlId='rideTime'>
+//       <Form.Label>Ride Time</Form.Label>
+//       <Form.Control
+//         type='time'
+//         name='rideTime'
+//         value={rideData.rideTime}
+//         onChange={handleChange}
+//         required
+//         min={
+//           rideData.rideDate === getCurrentDate()
+//             ? getCurrentTime()
+//             : '00:00'
+//         }
+//       />
+//     </Form.Group>
+
+//     <Form.Group controlId='availableSeats'>
+//       <Form.Label>Seats Available</Form.Label>
+//       <Form.Control
+//         type='number'
+//         name='availableSeats'
+//         min='1'
+//         value={rideData.availableSeats}
+//         onChange={handleChange}
+//       />
+//     </Form.Group>
+
+//     {distance && <p>Distance: {distance} km</p>}
+//     {priceEstimate && <p>Price Estimate: ₹{priceEstimate}</p>}
+//     {isLoading && <Spinner animation='border' />}
+
+//     <Button type='submit' variant='primary' disabled={isLoading}>
+//       {isLoading ? 'Updating...' : 'Update Ride'}
+//     </Button>
+//   </Form>
+// </div>
