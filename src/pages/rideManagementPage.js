@@ -17,24 +17,23 @@ const RideManagementPage = () => {
   return (
     <Container className='mt-5'>
       <Row>
-        {/* <Col md={4}>
+        <Col md={4}>
           <Card>
             <Card.Header>Create a Ride</Card.Header>
             <Card.Body>
               <CreateRide />
             </Card.Body>
           </Card>
-        </Col> */}
-        {/* <Col md={4}>
+        </Col>{' '}
+        <Col md={4}>
           <Card>
             <Card.Header>My Rides</Card.Header>
             <Card.Body>
               <MyRides onRideSelect={handleRideSelection} />
             </Card.Body>
           </Card>
-        </Col> */}
-
-        {/* <Col md={4}>
+        </Col>
+        <Col md={4}>
           <Card>
             <Card.Header>Update Ride</Card.Header>
             <Card.Body>
@@ -45,20 +44,21 @@ const RideManagementPage = () => {
               )}
             </Card.Body>
           </Card>
-        </Col> */}
+        </Col>
+      </Row>
+      <Row>
+        <Col md={12}>
+          <Card>
+            <Card.Header>Search for Rides</Card.Header>
+            <Card.Body>
+              <SearchRides onRideSelect={handleRideSelection} />
+            </Card.Body>
+          </Card>
+        </Col>
       </Row>
 
-      <Col md={12}>
-        <Card>
-          <Card.Header>Search for Rides</Card.Header>
-          <Card.Body>
-            <SearchRides onRideSelect={handleRideSelection} />
-          </Card.Body>
-        </Card>
-      </Col>
-
       <Row className='mt-4'>
-        <Col md={6}>
+        {/* <Col md={6}>
           <Card>
             <Card.Header>Delete Ride</Card.Header>
             <Card.Body>
@@ -69,9 +69,8 @@ const RideManagementPage = () => {
               )}
             </Card.Body>
           </Card>
-        </Col>
-
-        <Col md={6}>
+        </Col> */}
+        {/* <Col md={6}>
           <Card>
             <Card.Header>Book Ride</Card.Header>
             <Card.Body>
@@ -82,7 +81,7 @@ const RideManagementPage = () => {
               )}
             </Card.Body>
           </Card>
-        </Col>
+        </Col> */}
       </Row>
     </Container>
   );
