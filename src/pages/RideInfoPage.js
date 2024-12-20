@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, Spinner } from 'react-bootstrap';
 import { getRideDetails } from '../api/rideApi.js';
+import RideMapView from '../components/RideMap/RideMapView'; // Import the map view component
 
 const RideInfo = () => {
   const { id } = useParams(); // Get the ride ID from the URL
@@ -71,6 +72,10 @@ const RideInfo = () => {
         <Card.Text>
           <strong>CO2 Savings:</strong> {ride.co2Savings} kg
         </Card.Text>
+        <RideMapView
+          startLocation={ride.startLocation}
+          endLocation={ride.endLocation}
+        />
         <div className='text-center'>
           <span
             style={{
