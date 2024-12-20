@@ -68,8 +68,6 @@ const DisplayRideButton = ({ rideId }) => {
   };
 
   const handleSubmit = async () => {
-    console.log('Handle submit clicked');
-
     const userId = user._id;
     const UserphoneNumber = phoneNumber;
     const Usertoken = token;
@@ -120,11 +118,16 @@ const DisplayRideButton = ({ rideId }) => {
       setSnackbarMessage('Passenger added successfully!');
       setSnackbarSeverity('success');
       setSnackbarOpen(true);
+      // Reload the page on success
+      // setTimeout(() => {
+      // }, 1000); // Optional delay to let the snackbar message display
     } catch (error) {
       console.error('Error:', error);
       setSnackbarMessage('An error occurred. Please try again later.');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
+    } finally {
+      window.location.reload();
     }
   };
 

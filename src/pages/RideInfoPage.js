@@ -99,6 +99,7 @@ const RideInfo = () => {
                   ride={ride}
                   passengerFare={passengerFare}
                   co2Savings={co2Savings}
+                  currentUser={currentUser}
                 />
               )}
             </Col>
