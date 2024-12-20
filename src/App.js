@@ -6,6 +6,7 @@ import Onboarding from './pages/onBoarding.js';
 import RideManagementPage from './pages/rideManagementPage.js';
 import CreateRidePage from './pages/CreateRidePage.js';
 import MyRidesPage from './pages/MyRidesPage.js';
+import RideInfo from './pages/RideInfoPage.js';
 import { AuthProvider } from './components/generalComponents/authContext.js';
 
 const App = () => {
@@ -18,7 +19,8 @@ const App = () => {
           <Route path='/onboarding' element={<Onboarding />} />
           <Route path='/RideManagementPage' element={<RideManagementPage />} />
           <Route path='/create-ride' element={<CreateRidePage />} />
-          <Route path='/my-rides' element={<MyRidesPage />} />
+          <Route path='/my-rides' element={<MyRidesPage />} />{' '}
+          <Route path='/ride/:id' element={<RideInfo />} />{' '}
         </Routes>
       </Router>
     </AuthProvider>
