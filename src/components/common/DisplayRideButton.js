@@ -7,10 +7,9 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
-import { submitPhoneNumber } from '../../api/userApi';
+import { submitPhoneNumber, addPassenger } from '../../api/driverApi.js';
 import { useAuth } from '../../components/generalComponents/authContext'; // Import useAuth from context
 import { getUserProfile } from '../../api/userApi'; // Import the getUserProfile function
-import { addPassenger } from '../../api/rideApi'; // Import addPassenger function from rideApi
 
 const DisplayRideButton = ({ rideId }) => {
   // Accept rideId as a prop
@@ -29,6 +28,7 @@ const DisplayRideButton = ({ rideId }) => {
         // Fetch the user profile from API if the user is not already set
         try {
           const userProfile = await getUserProfile(token); // Fetch user profile using token
+          console.log(userProfile);
           setUser(userProfile); // Set the user profile in context
           window.localStorage.setItem('user', JSON.stringify(userProfile)); // Optionally store in localStorage
         } catch (error) {
@@ -62,16 +62,11 @@ const DisplayRideButton = ({ rideId }) => {
 
   const handleSubmit = async () => {
     console.log('Handle submit clicked');
-    const passengerData = {
-      rideId: rideId._id,
-      userId: user._id,
-      location: location || 'Unknown', // Make sure location is included (use user.location instead of location)
-      phoneNumber: phoneNumber, // From modal
-    };
-    console.log(passengerData, token);
+
     const userId = user._id;
     const UserphoneNumber = phoneNumber;
     const Usertoken = token;
+
     try {
       // Step 1: Submit the phone number first
       const phoneResponse = await submitPhoneNumber(
@@ -80,31 +75,28 @@ const DisplayRideButton = ({ rideId }) => {
         Usertoken
       );
 
-      console.log('Phone Response:', phoneResponse); // Log the full response to check structure
       if (!phoneResponse.success) {
         alert(phoneResponse.message || 'Failed to submit phone number.');
         return;
       }
 
-      console.log('Phone number submitted:', phoneResponse.message);
+      // Prepare the passenger data
+      const passengerData = {
+        rideId: rideId._id, // Ensure rideId is the valid _id from the ride object
+        user: user._id, // The ID of the user (from the user object)
+        phoneNumber: phoneNumber || user.phoneNumber, // Use the phone number from the modal or default from user
+        location: location || 'Unknown', // Default to 'Unknown' if location is not provided
+      };
 
-      const passengerResponse = await addPassenger(passengerData, token);
-      console.log('Passenger Response:', passengerResponse); // Log the full response
+      // Step 2: Add the passenger to the ride
+      const passengerResponse = await addPassenger(passengerData); // Pass passengerData directly to the function
 
-      if (passengerResponse.success) {
-        alert('Passenger added successfully to the ride!');
-      } else {
-        alert('Failed to add passenger to the ride.');
-        console.log(
-          'Error adding passenger:',
-          passengerResponse.message || 'Unknown error'
-        );
+      if (!passengerResponse.success) {
+        alert(passengerResponse.message || 'Failed to add passenger.');
+        return;
       }
     } catch (error) {
       console.error('Error:', error);
-      alert(
-        'An error occurred while submitting the phone number or adding the passenger.'
-      );
     }
   };
 

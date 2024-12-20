@@ -65,33 +65,3 @@ export const deleteUser = async (token) => {
 
 //   return response.data;
 // };
-
-export const submitPhoneNumber = async (user, phoneNumber, token) => {
-  // Prepare the data being sent
-  const requestData = {
-    userId: user, // Ensure user._id is passed correctly
-    phoneNumber, // Phone number entered by the user
-  };
-
-  try {
-    // Make a PUT request to the API
-    const response = await axios.put(
-      'http://localhost:5000/api/users/updatePhoneNumber',
-      requestData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // Include token for authentication
-        },
-      }
-    );
-
-    // Return the response data
-    return response.data;
-  } catch (error) {
-    console.error('Error submitting phone number:', error);
-    return {
-      success: false,
-      message: error.response?.data?.message || 'Unknown error occurred',
-    };
-  }
-};
