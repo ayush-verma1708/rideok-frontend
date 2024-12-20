@@ -21,6 +21,12 @@ const RideMapView = ({ startLocation, endLocation }) => {
   const ORS_API_KEY =
     '5b3ce3597851110001cf62483628cb4427c2430b96c354f4d63058fd'; // Replace with your API key
 
+  const sliceAfterCommas = (sentence) => {
+    // Split the sentence by commas and take the first 3 parts
+    const parts = sentence.split(',');
+    return parts.slice(0, 3).join(', ');
+  };
+
   const getCoordinates = async (location) => {
     try {
       const response = await axios.get(NOMINATIM_API_URL, {
@@ -187,19 +193,23 @@ const RideMapView = ({ startLocation, endLocation }) => {
             top: '10px',
             left: '50%',
             transform: 'translateX(-50%)',
-            backgroundColor: 'rgba(255, 255, 255, 0.8)',
-            padding: '10px',
-            borderRadius: '10px',
-            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            padding: '8px 16px',
+            borderRadius: '8px',
+            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
+            maxWidth: '90%', // Ensures the card fits within a small box
+            minWidth: '250px', // Provides a sensible minimum width
+            textAlign: 'center', // Centers the content for a clean layout
+            zIndex: 10, // Ensures it stays above other elements if needed
           }}
         >
           <Card.Body>
             <Card.Title className='text-center'>Ride Route</Card.Title>
             <Card.Text>
-              <strong>From:</strong> {startLocation}
+              <strong>From:</strong> {sliceAfterCommas(startLocation)}
             </Card.Text>
             <Card.Text>
-              <strong>To:</strong> {endLocation}
+              <strong>To:</strong> {sliceAfterCommas(endLocation)}
             </Card.Text>
           </Card.Body>
         </Card>

@@ -15,7 +15,6 @@ const RideTile = ({ ride, currentUser }) => {
   };
 
   const onRideSelect = (rideId) => {
-    console.log(rideId);
     setSelectedRideId(rideId);
     navigate(`/ride/${rideId}`); // Change this line
   };

@@ -23,7 +23,6 @@ const Login = () => {
     setLoading(true); // Show loading spinner while logging in
     try {
       const data = await loginUser(email, password);
-      console.log('Response data:', data); // Debugging line
       window.localStorage.setItem('token', data.token);
       window.localStorage.setItem('user', JSON.stringify(data));
       setEmail('');

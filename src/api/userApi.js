@@ -47,3 +47,51 @@ export const deleteUser = async (token) => {
   });
   return response.data;
 };
+
+// 6. Submit Phone Number
+// export const submitPhoneNumber = async (user, phoneNumber, token) => {
+//   const response = await axios.post(
+//     `${API_URL}/users/updatePhoneNumber`,
+//     {
+//       userId: user, // Ensure user._id is being passed correctly
+//       phoneNumber, // Phone number entered by the user
+//     },
+//     {
+//       headers: {
+//         Authorization: `Bearer ${token}`, // Include token for authentication
+//       },
+//     }
+//   );
+
+//   return response.data;
+// };
+
+export const submitPhoneNumber = async (user, phoneNumber, token) => {
+  // Prepare the data being sent
+  const requestData = {
+    userId: user, // Ensure user._id is passed correctly
+    phoneNumber, // Phone number entered by the user
+  };
+
+  try {
+    // Make a PUT request to the API
+    const response = await axios.put(
+      'http://localhost:5000/api/users/updatePhoneNumber',
+      requestData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include token for authentication
+        },
+      }
+    );
+
+    // Return the response data
+    return response.data;
+  } catch (error) {
+    console.error('Error submitting phone number:', error);
+    return {
+      success: false,
+      message: error.response?.data?.message || 'Unknown error occurred',
+    };
+  }
+};
