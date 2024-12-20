@@ -40,9 +40,9 @@ const RideTile = ({ ride }) => {
         <Card.Subtitle className='mb-2 text-muted text-center'>
           <strong>Driver:</strong> {ride.driver.name} ({ride.driver.email})
         </Card.Subtitle>
-        <Card.Text className='text-center'>
+        {/* <Card.Text className='text-center'>
           <strong>Price: ₹{ride.price.toFixed(2)}</strong>
-        </Card.Text>
+        </Card.Text> */}
         <Card.Text className='text-center'>
           <strong>Available Seats: </strong> {ride.availableSeats}
         </Card.Text>
