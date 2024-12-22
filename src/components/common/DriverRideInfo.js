@@ -4,7 +4,7 @@ import {
   CardContent,
   Typography,
   Button,
-  Grid,
+  Grid2,
   List,
   ListItem,
   ListItemText,
@@ -27,16 +27,16 @@ const DriverRideInfo = ({
           <strong>Your Ride</strong>
         </Typography>
 
-        <Grid container spacing={2}>
+        <Grid2 container spacing={2}>
           {/* Ride Info */}
-          <Grid item xs={12}>
+          <Grid2 item xs={12}>
             <Typography variant='body1' align='center'>
               <strong>You're the driver for this ride.</strong>
             </Typography>
-          </Grid>
+          </Grid2>
 
           {/* Manage Ride Button */}
-          <Grid item xs={12}>
+          <Grid2 item xs={12}>
             <Button
               variant='contained'
               fullWidth
@@ -48,11 +48,11 @@ const DriverRideInfo = ({
             >
               Manage Ride
             </Button>
-          </Grid>
+          </Grid2>
 
           {/* Start/End Ride Buttons */}
           {ride.rideStatus === 'Scheduled' && (
-            <Grid item xs={12}>
+            <Grid2 item xs={12}>
               <Button
                 variant='contained'
                 fullWidth
@@ -64,10 +64,10 @@ const DriverRideInfo = ({
               >
                 Start Ride
               </Button>
-            </Grid>
+            </Grid2>
           )}
           {ride.rideStatus === 'In Progress' && (
-            <Grid item xs={12}>
+            <Grid2 item xs={12}>
               <Button
                 variant='contained'
                 fullWidth
@@ -79,11 +79,11 @@ const DriverRideInfo = ({
               >
                 End Ride
               </Button>
-            </Grid>
+            </Grid2>
           )}
 
           {/* View Passengers */}
-          <Grid item xs={12}>
+          <Grid2 item xs={12}>
             <Button
               variant='outlined'
               fullWidth
@@ -96,10 +96,10 @@ const DriverRideInfo = ({
             >
               View Passengers
             </Button>
-          </Grid>
+          </Grid2>
 
           {/* Cancel Ride */}
-          <Grid item xs={12}>
+          <Grid2 item xs={12}>
             <Button
               variant='contained'
               fullWidth
@@ -111,8 +111,8 @@ const DriverRideInfo = ({
             >
               Cancel Ride
             </Button>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
 
         {/* Passengers List */}
         <Typography variant='body1' sx={{ marginTop: 3, fontWeight: 'bold' }}>
