@@ -51,15 +51,15 @@ export const updateRide = async (rideId, updatedData) => {
 };
 
 // 5. Delete a Ride (driver only)
-export const deleteRide = async (rideId) => {
-  const response = await axios.delete(`${API_URL}/delete/${rideId}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${getToken()}`,
-    },
-  });
-  return response.data;
-};
+// export const deleteRide = async (rideId) => {
+//   const response = await axios.delete(`${API_URL}/delete/${rideId}`, {
+//     headers: {
+//       'Content-Type': 'application/json',
+//       Authorization: `Bearer ${getToken()}`,
+//     },
+//   });
+//   return response.data;
+// };
 
 // 6. Get Ride Details
 export const getRideDetails = async (rideId) => {
