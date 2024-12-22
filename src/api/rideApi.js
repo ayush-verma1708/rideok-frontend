@@ -83,3 +83,22 @@ export const getMyRides = async () => {
   });
   return response.data;
 };
+
+export const handleRideRequest = async (rideId, action, passengerId) => {
+  try {
+    // API call to the backend
+    const response = await axios.post(`${API_URL}/handle-request`, {
+      rideId,
+      action,
+      passengerId,
+    });
+
+    // Return the updated ride data
+    return response.data;
+  } catch (error) {
+    console.error('Error handling ride request:', error);
+    throw new Error(
+      error.response?.data?.message || 'Failed to handle ride request'
+    );
+  }
+};

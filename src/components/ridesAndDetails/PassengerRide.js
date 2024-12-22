@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getRideDetails } from '../../api/rideApi'; // Assuming this API fetches ride data
+import { getRideDetails, handleRideRequest } from '../../api/rideApi'; // Assuming this API fetches ride data
 import {
   Table,
   TableBody,
@@ -26,50 +26,69 @@ const PassengerRideInfo = ({ rideId }) => {
   const [openRejectModal, setOpenRejectModal] = useState(false); // Modal for rejection confirmation
   const [loading, setLoading] = useState(false); // Loading state for fetching data
 
-  const approveRequest = async (requestId) => {
-    // API call to approve a request
-    console.log('Approved request with ID:', requestId);
+  const approveRequest = async (passengerId) => {
+    try {
+      const updatedRide = await handleRideRequest(
+        rideId,
+        'approve',
+        passengerId
+      );
+      console.log('Ride updated:', updatedRide);
+      // Update state or show a success message
+    } catch (error) {
+      console.error('Error approving ride:', error.message);
+      // Show an error message
+    }
   };
 
-  const rejectRequest = async (requestId) => {
-    // API call to reject a request
-    console.log('Rejected request with ID:', requestId);
+  const rejectRequest = async (passengerId) => {
+    try {
+      const updatedRide = await handleRideRequest(
+        rideId,
+        'reject',
+        passengerId
+      );
+      console.log('Ride updated:', updatedRide);
+      // Update state or show a success message
+    } catch (error) {
+      console.error('Error rejecting ride:', error.message);
+      // Show an error message
+    }
   };
+  const fetchRideDetails = async () => {
+    setLoading(true);
+    try {
+      const data = await getRideDetails(rideId); // API call to get ride data by rideId
+      setRide(data);
 
+      // Fetch user details for all passengers and requested riders
+      const userDetailsMap = {};
+
+      // Fetch user details for requested riders
+      for (const request of data.customerRequests) {
+        if (!userDetailsMap[request.user]) {
+          const userData = await getUserById(request.user);
+          userDetailsMap[request.user] = userData.name;
+        }
+      }
+
+      // Fetch user details for approved passengers
+      for (const passenger of data.passengers) {
+        if (!userDetailsMap[passenger.user._id]) {
+          const userData = await getUserById(passenger.user._id);
+          userDetailsMap[passenger.user._id] = userData.name;
+        }
+      }
+
+      setUserDetails(userDetailsMap);
+    } catch (error) {
+      console.error('Error fetching ride details:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     // Fetch ride details including passengers when the component mounts
-    const fetchRideDetails = async () => {
-      setLoading(true);
-      try {
-        const data = await getRideDetails(rideId); // API call to get ride data by rideId
-        setRide(data);
-
-        // Fetch user details for all passengers and requested riders
-        const userDetailsMap = {};
-
-        // Fetch user details for requested riders
-        for (const request of data.customerRequests) {
-          if (!userDetailsMap[request.user]) {
-            const userData = await getUserById(request.user);
-            userDetailsMap[request.user] = userData.name;
-          }
-        }
-
-        // Fetch user details for approved passengers
-        for (const passenger of data.passengers) {
-          if (!userDetailsMap[passenger.user._id]) {
-            const userData = await getUserById(passenger.user._id);
-            userDetailsMap[passenger.user._id] = userData.name;
-          }
-        }
-
-        setUserDetails(userDetailsMap);
-      } catch (error) {
-        console.error('Error fetching ride details:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
     fetchRideDetails();
   }, [rideId]);
@@ -91,6 +110,7 @@ const PassengerRideInfo = ({ rideId }) => {
     } finally {
       setLoading(false);
     }
+    fetchRideDetails();
   };
 
   const handleReject = async (requestId) => {
@@ -110,6 +130,7 @@ const PassengerRideInfo = ({ rideId }) => {
     } finally {
       setLoading(false);
     }
+    fetchRideDetails();
   };
 
   return (

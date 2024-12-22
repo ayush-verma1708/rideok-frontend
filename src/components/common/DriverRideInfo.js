@@ -103,7 +103,12 @@ const DriverRideInfo = ({ ride, onStartRide, onEndRide }) => {
           {ride.passengers.length > 0 ? (
             ride.passengers.map((passenger, index) => (
               <ListItem key={index} sx={{ borderBottom: '1px solid #ddd' }}>
-                <ListItemText primary={passenger} />
+                <ListItemText
+                  primary={`User: ${passenger.user}, Location: ${passenger.location}`}
+                  secondary={`Phone: ${passenger.phoneNumber}, Approval: ${
+                    passenger.approval ? 'Approved' : 'Pending'
+                  }`}
+                />
               </ListItem>
             ))
           ) : (
