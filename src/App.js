@@ -8,6 +8,7 @@ import CreateRidePage from './pages/CreateRidePage.js';
 import MyRidesPage from './pages/MyRidesPage.js';
 import RideInfo from './pages/RideInfoPage.js';
 import { AuthProvider } from './components/generalComponents/authContext.js';
+import AboutUs from './pages/AboutUs.js';
 
 const App = () => {
   return (
@@ -21,6 +22,8 @@ const App = () => {
           <Route path='/create-ride' element={<CreateRidePage />} />
           <Route path='/my-rides' element={<MyRidesPage />} />{' '}
           <Route path='/ride/:id' element={<RideInfo />} />{' '}
+          <Route path='/about-us' element={<AboutUs />} />
+          <Route path='*' element={<h1>Not Found</h1>} />
         </Routes>
       </Router>
     </AuthProvider>

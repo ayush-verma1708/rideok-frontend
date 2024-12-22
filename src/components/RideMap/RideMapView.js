@@ -42,94 +42,99 @@ const RideMapView = ({ startLocation, endLocation }) => {
     return null;
   };
 
-  const initializeMap = async () => {
-    const startCoords = await getCoordinates(startLocation);
-    const endCoords = await getCoordinates(endLocation);
-
-    if (startCoords && endCoords) {
-      if (!mapRef.current) {
-        mapRef.current = L.map('map').setView(
-          [startCoords.lat, startCoords.lon],
-          10
-        );
-
-        // Custom Map Style (can be changed to match branding)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: 19,
-        }).addTo(mapRef.current);
-
-        // Request Route from OpenRouteService API
-        const routeResponse = await axios.get(
-          'https://api.openrouteservice.org/v2/directions/driving-car',
-          {
-            params: {
-              api_key: ORS_API_KEY,
-              start: `${startCoords.lon},${startCoords.lat}`,
-              end: `${endCoords.lon},${endCoords.lat}`,
-              avoid: routeOptions.avoidHighways ? 'highways' : '',
-              avoid_tolls: routeOptions.avoidTolls ? 'true' : 'false',
-            },
-          }
-        );
-
-        const routeCoords = routeResponse.data.features[0].geometry.coordinates;
-        const latLngs = routeCoords.map(([lon, lat]) => [lat, lon]);
-
-        // Thicker and highlighted polyline for the route
-        L.polyline(latLngs, {
-          color: 'orange',
-          weight: 6,
-          opacity: 0.7,
-        }).addTo(mapRef.current);
-
-        // Custom icons for start and end using images (can be replaced with your own images)
-        const startIcon = L.icon({
-          iconUrl: '/start.png', // Ensure the image exists
-          iconSize: [30, 30],
-          iconAnchor: [15, 30],
-        });
-
-        const endIcon = L.icon({
-          iconUrl: '/end.png', // Ensure the image exists
-          iconSize: [30, 30],
-          iconAnchor: [15, 30],
-        });
-
-        // Add markers with custom icons
-        const startMarker = L.marker([startCoords.lat, startCoords.lon], {
-          icon: startIcon,
-        }).addTo(mapRef.current);
-        startMarker.bindPopup(`<strong>Start: ${startLocation}</strong>`);
-
-        const endMarker = L.marker([endCoords.lat, endCoords.lon], {
-          icon: endIcon,
-        }).addTo(mapRef.current);
-        endMarker.bindPopup(`<strong>End: ${endLocation}</strong>`);
-
-        // Adjust the map view to fit the route and markers
-        mapRef.current.fitBounds([
-          startMarker.getLatLng(),
-          endMarker.getLatLng(),
-        ]);
-
-        setLoading(false); // Hide loading spinner
-      }
-    }
-  };
-
   useEffect(() => {
-    initializeMap();
+    const initializeMap = async () => {
+      const startCoords = await getCoordinates(startLocation);
+      const endCoords = await getCoordinates(endLocation);
 
-    // Cleanup function to remove the map on unmount
-    return () => {
-      if (mapRef.current) {
-        mapRef.current.remove();
-        mapRef.current = null;
+      if (startCoords && endCoords) {
+        if (!mapRef.current) {
+          mapRef.current = L.map('map').setView(
+            [startCoords.lat, startCoords.lon],
+            10
+          );
+
+          // Custom Map Style (can be changed to match branding)
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+          }).addTo(mapRef.current);
+
+          // Request Route from OpenRouteService API
+          const routeResponse = await axios.get(
+            'https://api.openrouteservice.org/v2/directions/driving-car',
+            {
+              params: {
+                api_key: ORS_API_KEY,
+                start: `${startCoords.lon},${startCoords.lat}`,
+                end: `${endCoords.lon},${endCoords.lat}`,
+                avoid: routeOptions.avoidHighways ? 'highways' : '',
+                avoid_tolls: routeOptions.avoidTolls ? 'true' : 'false',
+              },
+            }
+          );
+
+          const routeCoords =
+            routeResponse.data.features[0].geometry.coordinates;
+          const latLngs = routeCoords.map(([lon, lat]) => [lat, lon]);
+
+          // Thicker and highlighted polyline for the route
+          L.polyline(latLngs, {
+            color: 'blue',
+            weight: 6,
+            opacity: 0.7,
+          }).addTo(mapRef.current);
+
+          // Custom icons for start and end using images (can be replaced with your own images)
+          const startIcon = L.icon({
+            iconUrl: '/start.png', // Ensure the image exists
+            iconSize: [30, 30],
+            iconAnchor: [15, 30],
+          });
+
+          const endIcon = L.icon({
+            iconUrl: '/end.png', // Ensure the image exists
+            iconSize: [30, 30],
+            iconAnchor: [15, 30],
+          });
+
+          // Add markers with custom icons
+          const startMarker = L.marker([startCoords.lat, startCoords.lon], {
+            icon: startIcon,
+          }).addTo(mapRef.current);
+          startMarker.bindPopup(`<strong>Start: ${startLocation}</strong>`);
+
+          const endMarker = L.marker([endCoords.lat, endCoords.lon], {
+            icon: endIcon,
+          }).addTo(mapRef.current);
+          endMarker.bindPopup(`<strong>End: ${endLocation}</strong>`);
+
+          // Adjust the map view to fit the route and markers
+          mapRef.current.fitBounds([
+            startMarker.getLatLng(),
+            endMarker.getLatLng(),
+          ]);
+
+          setLoading(false); // Hide loading spinner
+        }
       }
     };
+    initializeMap();
   }, [startLocation, endLocation, routeOptions]);
 
+  // useEffect(() => {
+  //   initializeMap();
+
+  //   // Cleanup function to remove the map on unmount
+  //   return () => {
+  //     if (mapRef.current) {
+  //       mapRef.current.remove();
+  //       mapRef.current = null;
+  //     }
+  //   };
+  // }, [startLocation, endLocation, routeOptions]);
+
   // Search function to center the map based on search input
+
   const handleSearch = async () => {
     const { lat, lon } = await getCoordinates(query);
     if (lat && lon) {
