@@ -34,9 +34,9 @@ const RideTile = ({ ride, currentUser, onSelectRide, showDriver = true }) => {
         const minutes = Math.floor(
           (difference % (1000 * 60 * 60)) / (1000 * 60)
         );
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+        // const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-        setCountdown(`${hours}h ${minutes}m ${seconds}s`);
+        setCountdown(`${hours}h ${minutes}m `);
       }
     }, 1000); // Update every second
 
@@ -172,7 +172,7 @@ const RideTile = ({ ride, currentUser, onSelectRide, showDriver = true }) => {
         {userStatus === 'notLoggedIn' ? (
           <Button
             variant='primary'
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/onboarding')}
             style={{ width: '100%' }}
           >
             Log In to Join Ride

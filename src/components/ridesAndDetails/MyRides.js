@@ -3,7 +3,7 @@ import { getMyRides } from '../../api/rideApi.js'; // Assuming the API functions
 import { Row, Col, Spinner } from 'react-bootstrap';
 import RideTile from '../common/RideTile.js'; // Importing the new component
 
-const MyRides = ({ onRideSelect }) => {
+const MyRides = ({ onRideSelect }, userId) => {
   const [rides, setRides] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -53,7 +53,11 @@ const MyRides = ({ onRideSelect }) => {
         <Row xs={1} md={2} lg={3} className='g-4'>
           {rides.map((ride) => (
             <Col key={ride._id}>
-              <RideTile ride={ride} onSelect={onRideSelect} />
+              <RideTile
+                currentUser={userId}
+                ride={ride}
+                onSelect={onRideSelect}
+              />
             </Col>
           ))}
         </Row>

@@ -3,7 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import MyRides from '../components/ridesAndDetails/MyRides';
 import { useAuth } from '../components/generalComponents/authContext'; // Import the useAuth hook
 
-const MyRidesPage = () => {
+const MyRidesPage = ({ userId }) => {
   const { state } = useAuth(); // Access user and token from the auth context
   const { user } = state; // Destructure the user from state
   const [selectedRideId, setSelectedRideId] = useState(null);
@@ -19,7 +19,7 @@ const MyRidesPage = () => {
         {user ? (
           <>
             <h2>My Rides</h2>
-            <MyRides onRideSelect={handleRideSelection} />{' '}
+            <MyRides userId={userId} onRideSelect={handleRideSelection} />{' '}
             {/* Show user's rides component */}
           </>
         ) : (
