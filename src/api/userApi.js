@@ -48,6 +48,11 @@ export const deleteUser = async (token) => {
   return response.data;
 };
 
+//6. Get User by id
+export const getUserById = async (userId) => {
+  const response = await axios.get(`${API_URL}/users/userId/${userId}`);
+  return response.data;
+};
 // 6. Submit Phone Number
 // export const submitPhoneNumber = async (user, phoneNumber, token) => {
 //   const response = await axios.post(

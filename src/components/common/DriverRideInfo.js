@@ -11,15 +11,9 @@ import {
 } from '@mui/material';
 import UpdateRide from '../ridesAndDetails/UpdateRide'; // Make sure the correct path is used for your UpdateRide component
 import DeleteRide from '../ridesAndDetails/DeleteRide';
+import PassengerRideInfo from '../ridesAndDetails/PassengerRide';
 
-const DriverRideInfo = ({
-  ride,
-  onManageRide,
-  onCancelRide,
-  onStartRide,
-  onEndRide,
-  onViewPassengers,
-}) => {
+const DriverRideInfo = ({ ride, onStartRide, onEndRide }) => {
   const [isManagingRide, setIsManagingRide] = useState(false); // State to toggle Manage Ride form
 
   const handleManageRideClick = () => {
@@ -92,33 +86,11 @@ const DriverRideInfo = ({
 
           {/* View Passengers */}
           <Grid2 item xs={12}>
-            <Button
-              variant='outlined'
-              fullWidth
-              onClick={onViewPassengers}
-              sx={{
-                borderColor: '#17a2b8',
-                color: '#17a2b8',
-                '&:hover': { backgroundColor: '#17a2b8', color: 'white' },
-              }}
-            >
-              View Passengers
-            </Button>
+            <PassengerRideInfo rideId={ride._id} />
           </Grid2>
 
           {/* Cancel Ride */}
           <Grid2 item xs={12}>
-            {/* <Button
-              variant='contained'
-              fullWidth
-              onClick={DeleteRide}
-              sx={{
-                backgroundColor: '#dc3545',
-                '&:hover': { backgroundColor: '#c82333' },
-              }}
-            >
-              Cancel Ride
-            </Button> */}
             <DeleteRide rideId={ride._id} />
           </Grid2>
         </Grid2>
