@@ -3,7 +3,7 @@ import { searchRides, getAllRides, bookRide } from '../../api/rideApi.js'; // Im
 import AutocompleteSearch from '../generalComponents/locationBlock.js';
 import RideTile from '../common/RideTile.js'; // Import the reusable RideTile component
 
-const SearchRides = () => {
+const SearchRides = ({ user }) => {
   const [rides, setRides] = useState([]);
   const [filteredRides, setFilteredRides] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -105,7 +105,7 @@ const SearchRides = () => {
         ) : (
           filteredRides.map((ride) => (
             <div className='col-md-4' key={ride.id}>
-              <RideTile ride={ride} />
+              <RideTile ride={ride} currentUser={user} />
             </div>
           ))
         )}

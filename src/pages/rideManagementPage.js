@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import CreateRide from '../components/ridesAndDetails/CreateRide.js';
 import MyRides from '../components/ridesAndDetails/MyRides.js';
-import BookRide from '../components/ridesAndDetails/BookRide.js';
 import SearchRides from '../components/ridesAndDetails/SearchRides.js';
 import UpdateRide from '../components/ridesAndDetails/UpdateRide.js';
-import DeleteRide from '../components/ridesAndDetails/DeleteRide.js';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 
 const RideManagementPage = () => {
