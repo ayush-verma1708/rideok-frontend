@@ -3,27 +3,36 @@ import { getMyRides } from '../../api/rideApi.js'; // Assuming the API functions
 import { Row, Col, Spinner } from 'react-bootstrap';
 import RideTile from '../common/RideTile.js'; // Importing the new component
 
-const MyRides = ({ onRideSelect }, userId) => {
+const MyRides = ({ onRideSelect, userId }) => {
   const [rides, setRides] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch rides created by the logged-in user
+  // Fetch rides created by or for the logged-in user
   useEffect(() => {
     const fetchRides = async () => {
       try {
         setLoading(true);
-        const response = await getMyRides();
-        setRides(response); // Assuming response is an array of rides
+        setError(null); // Reset error state before making a request
+        const response = await getMyRides(userId); // Assuming you pass userId if needed in the API request
+
+        // Check if the response is valid and an array, else set default
+        if (response && Array.isArray(response) && response.length > 0) {
+          setRides(response); // Set the fetched rides
+        } else {
+          setRides([]); // Explicitly setting an empty array for no rides
+        }
       } catch (err) {
         setError('Error fetching rides. Please try again later.');
+        console.error('Error fetching rides:', err); // Log error for debugging
+        setRides([]); // Set an empty array in case of error, as no rides could be fetched
       } finally {
         setLoading(false);
       }
     };
 
     fetchRides();
-  }, []); // Empty dependency array ensures this runs once when the component mounts
+  }, [userId]); // Now using userId as a dependency in case it changes
 
   if (loading) {
     return (
@@ -47,7 +56,9 @@ const MyRides = ({ onRideSelect }, userId) => {
       </h2>
       {rides.length === 0 ? (
         <p style={{ textAlign: 'center' }}>
-          You have not created any rides yet.
+          {error
+            ? 'Unable to fetch your rides. Please try again later.'
+            : 'You have not created any rides yet.'}
         </p>
       ) : (
         <Row xs={1} md={2} lg={3} className='g-4'>
@@ -67,6 +78,85 @@ const MyRides = ({ onRideSelect }, userId) => {
 };
 
 export default MyRides;
+
+// import React, { useState, useEffect } from 'react';
+// import { getMyRides } from '../../api/rideApi.js'; // Assuming the API functions are in a separate file
+// import { Row, Col, Spinner } from 'react-bootstrap';
+// import RideTile from '../common/RideTile.js'; // Importing the new component
+
+// const MyRides = ({ onRideSelect }, userId) => {
+//   const [rides, setRides] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   // Fetch rides created by the logged-in user
+//   useEffect(() => {
+//     const fetchRides = async () => {
+//       try {
+//         setLoading(true);
+//         setError(''); // Reset error state before making a request
+//         const response = await getMyRides();
+
+//         // Check if the response is valid and an array, else set default
+//         if (response && Array.isArray(response) && response.length > 0) {
+//           setRides(response); // Set the fetched rides
+//         } else {
+//           setRides([{ name: 'No rides available' }]); // Set a default ride if no response
+//         }
+//       } catch (err) {
+//         setError('Error fetching rides. Please try again later.');
+//         console.error('Error fetching rides:', err); // Log error for debugging
+//         setRides([{ name: 'No rides available' }]); // Set a default ride in case of error
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchRides();
+//   }, []); // Empty dependency array ensures this runs once when the component mounts
+
+//   if (loading) {
+//     return (
+//       <div className='text-center'>
+//         <Spinner animation='border' role='status'>
+//           <span className='visually-hidden'>Loading...</span>
+//         </Spinner>
+//         <p>Loading your rides...</p>
+//       </div>
+//     );
+//   }
+
+//   if (error) {
+//     return <div style={{ color: 'red', textAlign: 'center' }}>{error}</div>;
+//   }
+
+//   return (
+//     <div style={{ padding: '20px' }}>
+//       <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>
+//         Your Created Rides
+//       </h2>
+//       {rides.length === 0 ? (
+//         <p style={{ textAlign: 'center' }}>
+//           You have not created any rides yet.
+//         </p>
+//       ) : (
+//         <Row xs={1} md={2} lg={3} className='g-4'>
+//           {rides.map((ride) => (
+//             <Col key={ride._id}>
+//               <RideTile
+//                 currentUser={userId}
+//                 ride={ride}
+//                 onSelect={onRideSelect}
+//               />
+//             </Col>
+//           ))}
+//         </Row>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default MyRides;
 
 // import React, { useState, useEffect } from 'react';
 // import { getMyRides } from '../../api/rideApi.js'; // Assuming the API functions are in a separate file

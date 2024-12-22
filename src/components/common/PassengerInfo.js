@@ -15,35 +15,79 @@ const PassengerRideInfo = ({
 }) => {
   const [userStatus, setUserStatus] = useState('not-participating');
 
+  // useEffect(() => {
+  //   if (ride && currentUser) {
+  //     // Check if the current user is the driver
+  //     if (ride.driver && ride.driver._id === currentUser._id) {
+  //       setUserStatus('driver');
+  //       return;
+  //     }
+
+  //     // Check if the current user is in customerRequests
+  //     const isCustomerRequested = ride.customerRequests.some(
+  //       (request) => request.user === currentUser._id
+  //     );
+  //     if (isCustomerRequested) {
+  //       setUserStatus('customer-requested');
+  //       return;
+  //     }
+
+  //     // Check if the current user is in passengers
+  //     const isPassenger = ride.passengers.some(
+  //       (passenger) => passenger._id === currentUser._id
+  //     );
+  //     if (isPassenger) {
+  //       setUserStatus('passenger');
+  //       return;
+  //     }
+
+  //     // Default to "not-participating" if no match
+  //     setUserStatus('not-participating');
+  //   }
+  // }, [ride, currentUser]);
+
   useEffect(() => {
-    if (ride && currentUser) {
-      // Check if the current user is the driver
-      if (ride.driver && ride.driver._id === currentUser._id) {
-        setUserStatus('driver');
-        return;
-      }
+    const updateUserStatus = () => {
+      try {
+        if (ride && currentUser) {
+          // Check if the current user is the driver
+          if (ride.driver && ride.driver._id === currentUser._id) {
+            setUserStatus('driver');
+            return;
+          }
 
-      // Check if the current user is in customerRequests
-      const isCustomerRequested = ride.customerRequests.some(
-        (request) => request.user === currentUser._id
-      );
-      if (isCustomerRequested) {
-        setUserStatus('customer-requested');
-        return;
-      }
+          // Check if the current user is in customerRequests
+          const isCustomerRequested = ride.customerRequests.some(
+            (request) => request.user === currentUser._id
+          );
+          if (isCustomerRequested) {
+            setUserStatus('customer-requested');
+            return;
+          }
 
-      // Check if the current user is in passengers
-      const isPassenger = ride.passengers.some(
-        (passenger) => passenger._id === currentUser._id
-      );
-      if (isPassenger) {
-        setUserStatus('passenger');
-        return;
-      }
+          // Check if the current user is in passengers
+          const isPassenger = ride.passengers.some(
+            (passenger) => passenger.user === currentUser._id
+          );
+          if (isPassenger) {
+            setUserStatus('passenger');
+            return;
+          }
 
-      // Default to "not-participating" if no match
-      setUserStatus('not-participating');
-    }
+          // Default to "not-participating" if no match
+          setUserStatus('not-participating');
+        } else {
+          console.warn(
+            'Ride or currentUser is undefined. Unable to determine user status.'
+          );
+        }
+      } catch (error) {
+        console.error('Error determining user status:', error);
+        setUserStatus('error'); // Optional: Set a fallback status
+      }
+    };
+
+    updateUserStatus();
   }, [ride, currentUser]);
 
   return (

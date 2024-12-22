@@ -75,13 +75,28 @@ export const getAllRides = async () => {
 
 // 8. Get My Rides
 export const getMyRides = async () => {
-  const response = await axios.get(`${API_URL}/user-rides`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${getToken()}`,
-    },
-  });
-  return response.data;
+  try {
+    const response = await axios.get(`${API_URL}/user-rides`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+      },
+    }); // Check if the response is valid and contains data
+    if (response && response.data && Array.isArray(response.data)) {
+      return response.data; // Return the rides data
+    } else {
+      return []; // Return an empty array if no rides are found or data is malformed
+    }
+  } catch (err) {
+    console.error('Error fetching rides:', err);
+    // Handle different types of errors and return an appropriate default response
+    if (err.response && err.response.status === 404) {
+      // Handle case where no rides exist
+      return []; // No rides found
+    }
+    // Handle network errors or other issues
+    return []; // You can return a default empty array or a fallback message if needed
+  }
 };
 
 export const handleRideRequest = async (rideId, action, passengerId) => {
