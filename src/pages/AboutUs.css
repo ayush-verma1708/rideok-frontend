@@ -1,0 +1,92 @@
+/* AboutUs.css */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+}
+
+.about-us-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.about-us-header {
+  text-align: center;
+  background-color: #0078d7;
+  color: white;
+  padding: 20px;
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.about-us-header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+.about-us-header p {
+  margin: 10px 0 0;
+  font-size: 1.2rem;
+}
+
+.about-us-content {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.about-us-info {
+  margin-bottom: 20px;
+}
+
+.about-us-info h2 {
+  font-size: 1.8rem;
+  color: #0078d7;
+}
+
+.about-us-info p {
+  line-height: 1.6;
+}
+
+.contact-section {
+  margin-top: 20px;
+}
+
+.contact-section h2 {
+  font-size: 1.8rem;
+  color: #0078d7;
+}
+
+.contact-list {
+  list-style: none;
+  padding: 0;
+}
+
+.contact-list li {
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
+
+.contact-list a {
+  color: #0078d7;
+  text-decoration: none;
+}
+
+.contact-list a:hover {
+  text-decoration: underline;
+}
+
+.about-us-footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #f4f4f9;
+  font-size: 0.9rem;
+  color: #777;
+}
