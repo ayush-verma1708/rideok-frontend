@@ -34,7 +34,7 @@ const Header = () => {
     { name: 'Schedule My Ride', path: '/create-ride' },
     { name: 'My Rides', path: '/my-rides' },
     { name: 'Ride Calculator', path: 'https://rideok.vercel.app/' },
-    { name: 'About Us', path: '/https://ayush-verma-1708.netlify.app/' },
+    { name: 'About Us', path: 'https://ayush-verma-1708.netlify.app/' },
   ];
 
   const handleLogout = () => {
