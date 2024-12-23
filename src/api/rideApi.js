@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/rides'; // Adjust based on your backend server URL
+const API_URL = 'https://rideok-backend.onrender.com/api/rides'; // Adjust based on your backend server URL
 
 // Get the user token from localStorage
 const getToken = () => localStorage.getItem('token');

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base URL for API requests
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://rideok-backend.onrender.com/api';
 
 // 1. Login User
 export const loginUser = async (email, password) => {

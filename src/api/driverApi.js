@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base URL for API requests
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://rideok-backend.onrender.com/api';
 
 export const submitPhoneNumber = async (user, phoneNumber, token) => {
   // Prepare the data being sent
@@ -13,7 +13,7 @@ export const submitPhoneNumber = async (user, phoneNumber, token) => {
   try {
     // Make a PUT request to the API
     const response = await axios.put(
-      'http://localhost:5000/api/users/updatePhoneNumber',
+      'https://rideok-backend.onrender.com/api/users/updatePhoneNumber',
       requestData,
       {
         headers: {
@@ -75,7 +75,7 @@ export const submitPhoneNumber = async (user, phoneNumber, token) => {
 // export const addPassenger = async (passengerData) => {
 //   try {
 //     const response = await fetch(
-//       'http://localhost:5000/api/driver/add-passenger',
+//       'https://rideok-backend.onrender.com/api/driver/add-passenger',
 //       {
 //         method: 'PUT',
 
@@ -101,7 +101,7 @@ export const submitPhoneNumber = async (user, phoneNumber, token) => {
 export const addPassenger = async (passengerData) => {
   try {
     const response = await fetch(
-      'http://localhost:5000/api/driver/add-passenger',
+      'https://rideok-backend.onrender.com/api/driver/add-passenger',
       {
         method: 'PUT',
         headers: {
