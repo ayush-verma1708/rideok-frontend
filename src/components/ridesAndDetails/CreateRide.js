@@ -3,6 +3,7 @@ import { Button, Form, Alert, Spinner, Container } from 'react-bootstrap';
 import { createRide } from '../../api/rideApi';
 import AutocompleteSearch from '../generalComponents/locationBlock.js';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const CreateRide = () => {
   const [rideData, setRideData] = useState({
@@ -22,6 +23,9 @@ const CreateRide = () => {
   const [priceEstimate, setPriceEstimate] = useState(null);
 
   const baseFarePerKm = 13; // ₹13 per km
+
+  // Initialize navigate function
+  const navigate = useNavigate();
 
   // Traffic and road condition multipliers
   const trafficMultipliers = { light: 1, moderate: 1.2, heavy: 1.5 };
@@ -139,6 +143,8 @@ const CreateRide = () => {
       const newRide = await createRide(cleanedRideData);
       setIsLoading(false);
       setSuccessMessage('Ride created successfully!');
+      // Navigate to the "My Rides" page after success
+      navigate('/my-rides');
     } catch (error) {
       setIsLoading(false);
       setErrorMessage(

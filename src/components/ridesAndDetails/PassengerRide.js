@@ -133,9 +133,126 @@ const PassengerRideInfo = ({ rideId }) => {
     fetchRideDetails();
   };
 
+  //   return (
+  //     <div>
+  //       <h2>Ride Passenger Information</h2>
+
+  //       {/* Snackbar for action feedback */}
+  //       <Snackbar
+  //         open={showToast}
+  //         autoHideDuration={6000}
+  //         onClose={() => setShowToast(false)}
+  //         message='Request action completed successfully!'
+  //       />
+
+  //       {/* Display Requested Riders */}
+  //       <h3>Requested Riders</h3>
+  //       {loading ? (
+  //         <CircularProgress />
+  //       ) : ride && ride.customerRequests && ride.customerRequests.length > 0 ? (
+  //         <TableContainer>
+  //           <Table>
+  //             <TableHead>
+  //               <TableRow>
+  //                 <TableCell>Name</TableCell>
+  //                 <TableCell>Phone Number</TableCell>
+  //                 <TableCell>Location</TableCell>
+  //                 <TableCell>Approval Status</TableCell>
+  //                 <TableCell>Action</TableCell>
+  //               </TableRow>
+  //             </TableHead>
+  //             <TableBody>
+  //               {ride.customerRequests.map((request, index) => (
+  //                 <TableRow key={index}>
+  //                   <TableCell>
+  //                     {userDetails[request.user] || 'Loading...'}
+  //                   </TableCell>
+  //                   <TableCell>{request.phoneNumber}</TableCell>
+  //                   <TableCell>{request.location}</TableCell>
+  //                   <TableCell>
+  //                     {request.approval ? 'Approved' : 'Pending'}
+  //                   </TableCell>
+  //                   <TableCell>
+  //                     <Button
+  //                       variant='contained'
+  //                       color='primary'
+  //                       onClick={() => {
+  //                         setSelectedPassenger(request);
+  //                         setOpenApproveModal(true);
+  //                       }}
+  //                     >
+  //                       Approve
+  //                     </Button>
+  //                     <Button
+  //                       variant='contained'
+  //                       color='secondary'
+  //                       onClick={() => {
+  //                         setSelectedPassenger(request);
+  //                         setOpenRejectModal(true);
+  //                       }}
+  //                     >
+  //                       Reject
+  //                     </Button>
+  //                   </TableCell>
+  //                 </TableRow>
+  //               ))}
+  //             </TableBody>
+  //           </Table>
+  //         </TableContainer>
+  //       ) : (
+  //         <p>No requested riders found.</p>
+  //       )}
+
+  //       {/* Approve Modal */}
+  //       <Dialog
+  //         open={openApproveModal}
+  //         onClose={() => setOpenApproveModal(false)}
+  //       >
+  //         <DialogTitle>Approve Rider?</DialogTitle>
+  //         <DialogContent>
+  //           Are you sure you want to approve this rider for the ride?
+  //         </DialogContent>
+  //         <DialogActions>
+  //           <Button onClick={() => setOpenApproveModal(false)} color='primary'>
+  //             Cancel
+  //           </Button>
+  //           <Button
+  //             onClick={() => handleApprove(selectedPassenger.user)}
+  //             color='primary'
+  //           >
+  //             Confirm
+  //           </Button>
+  //         </DialogActions>
+  //       </Dialog>
+
+  //       {/* Reject Modal */}
+  //       <Dialog open={openRejectModal} onClose={() => setOpenRejectModal(false)}>
+  //         <DialogTitle>Reject Rider?</DialogTitle>
+  //         <DialogContent>
+  //           Are you sure you want to reject this rider's request?
+  //         </DialogContent>
+  //         <DialogActions>
+  //           <Button onClick={() => setOpenRejectModal(false)} color='primary'>
+  //             Cancel
+  //           </Button>
+  //           <Button
+  //             onClick={() => handleReject(selectedPassenger.user)}
+  //             color='secondary'
+  //           >
+  //             Confirm
+  //           </Button>
+  //         </DialogActions>
+  //       </Dialog>
+  //     </div>
+  //   );
+  // };
   return (
-    <div>
-      <h2>Ride Passenger Information</h2>
+    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+      <h2
+        style={{ fontSize: '24px', textAlign: 'center', marginBottom: '20px' }}
+      >
+        Ride Information
+      </h2>
 
       {/* Snackbar for action feedback */}
       <Snackbar
@@ -145,37 +262,41 @@ const PassengerRideInfo = ({ rideId }) => {
         message='Request action completed successfully!'
       />
 
-      {/* Display Requested Riders */}
-      <h3>Requested Riders</h3>
+      {/* Requested Riders Table */}
       {loading ? (
         <CircularProgress />
-      ) : ride && ride.customerRequests && ride.customerRequests.length > 0 ? (
+      ) : ride && ride.customerRequests.length > 0 ? (
         <TableContainer>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Phone Number</TableCell>
-                <TableCell>Location</TableCell>
-                <TableCell>Approval Status</TableCell>
-                <TableCell>Action</TableCell>
+                <TableCell style={{ fontSize: '14px' }}>Name</TableCell>
+                <TableCell style={{ fontSize: '14px' }}>Location</TableCell>
+                <TableCell style={{ fontSize: '14px' }}>Phone number</TableCell>
+                <TableCell style={{ fontSize: '14px' }}>Status</TableCell>
+                <TableCell style={{ fontSize: '14px' }}>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {ride.customerRequests.map((request, index) => (
                 <TableRow key={index}>
-                  <TableCell>
+                  <TableCell style={{ fontSize: '14px' }}>
                     {userDetails[request.user] || 'Loading...'}
                   </TableCell>
-                  <TableCell>{request.phoneNumber}</TableCell>
-                  <TableCell>{request.location}</TableCell>
-                  <TableCell>
+                  <TableCell style={{ fontSize: '14px' }}>
+                    {request.location}
+                  </TableCell>
+                  <TableCell style={{ fontSize: '14px' }}>
+                    {request.phoneNumber}
+                  </TableCell>
+                  <TableCell style={{ fontSize: '14px' }}>
                     {request.approval ? 'Approved' : 'Pending'}
                   </TableCell>
                   <TableCell>
                     <Button
-                      variant='contained'
+                      variant='outlined'
                       color='primary'
+                      size='small'
                       onClick={() => {
                         setSelectedPassenger(request);
                         setOpenApproveModal(true);
@@ -184,8 +305,9 @@ const PassengerRideInfo = ({ rideId }) => {
                       Approve
                     </Button>
                     <Button
-                      variant='contained'
+                      variant='outlined'
                       color='secondary'
+                      size='small'
                       onClick={() => {
                         setSelectedPassenger(request);
                         setOpenRejectModal(true);
@@ -200,7 +322,9 @@ const PassengerRideInfo = ({ rideId }) => {
           </Table>
         </TableContainer>
       ) : (
-        <p>No requested riders found.</p>
+        <p style={{ textAlign: 'center', color: 'gray' }}>
+          No requested riders found.
+        </p>
       )}
 
       {/* Approve Modal */}

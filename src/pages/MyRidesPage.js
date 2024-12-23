@@ -9,6 +9,7 @@ const MyRidesPage = ({ userId }) => {
   const [selectedRideId, setSelectedRideId] = useState(null);
 
   const handleRideSelection = (rideId) => {
+    console.log(user);
     console.log(rideId);
     setSelectedRideId(rideId);
   };
@@ -19,7 +20,7 @@ const MyRidesPage = ({ userId }) => {
         {user ? (
           <>
             <h2>My Rides</h2>
-            <MyRides userId={userId} onRideSelect={handleRideSelection} />{' '}
+            <MyRides userId={user} onRideSelect={handleRideSelection} />{' '}
             {/* Show user's rides component */}
           </>
         ) : (

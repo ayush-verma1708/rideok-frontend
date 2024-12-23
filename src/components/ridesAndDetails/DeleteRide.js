@@ -27,7 +27,7 @@ const ExpireRide = ({ rideId }) => {
     <>
       {/* Button to trigger modal */}
       <Button onClick={handleShowModal} variant='warning'>
-        Expire Ride
+        Delete Ride
       </Button>
 
       {/* Confirmation Modal */}
@@ -44,7 +44,7 @@ const ExpireRide = ({ rideId }) => {
             Cancel
           </Button>
           <Button variant='warning' onClick={handleExpire}>
-            Expire Ride
+            Delete Ride
           </Button>
         </Modal.Footer>
       </Modal>

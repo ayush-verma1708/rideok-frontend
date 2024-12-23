@@ -3,7 +3,7 @@ import { useAuth } from '../components/generalComponents/authContext'; // Import
 import { Container, Row } from 'react-bootstrap';
 import SearchRides from '../components/ridesAndDetails/SearchRides';
 
-const HomePage = () => {
+const HomePage = ({ userId }) => {
   const { state } = useAuth(); // Access user and token from the auth context
   const { user, token } = state; // Destructure the user and token from state
   const [isVerified, setIsVerified] = useState(false);

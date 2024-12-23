@@ -15,37 +15,6 @@ const PassengerRideInfo = ({
 }) => {
   const [userStatus, setUserStatus] = useState('not-participating');
 
-  // useEffect(() => {
-  //   if (ride && currentUser) {
-  //     // Check if the current user is the driver
-  //     if (ride.driver && ride.driver._id === currentUser._id) {
-  //       setUserStatus('driver');
-  //       return;
-  //     }
-
-  //     // Check if the current user is in customerRequests
-  //     const isCustomerRequested = ride.customerRequests.some(
-  //       (request) => request.user === currentUser._id
-  //     );
-  //     if (isCustomerRequested) {
-  //       setUserStatus('customer-requested');
-  //       return;
-  //     }
-
-  //     // Check if the current user is in passengers
-  //     const isPassenger = ride.passengers.some(
-  //       (passenger) => passenger._id === currentUser._id
-  //     );
-  //     if (isPassenger) {
-  //       setUserStatus('passenger');
-  //       return;
-  //     }
-
-  //     // Default to "not-participating" if no match
-  //     setUserStatus('not-participating');
-  //   }
-  // }, [ride, currentUser]);
-
   useEffect(() => {
     const updateUserStatus = () => {
       try {
@@ -160,20 +129,13 @@ const PassengerRideInfo = ({
             )}
           </Grid2>
 
-          {/* DisplayRideButton or Login Button */}
+          {/* DisplayRideButton or Join/Login Button */}
           <Grid2 item xs={12}>
             {currentUser ? (
-              userStatus !== 'customer-requested' ? (
+              userStatus !== 'customer-requested' &&
+              userStatus !== 'passenger' ? (
                 <DisplayRideButton rideId={ride} />
-              ) : (
-                <Button
-                  variant='contained'
-                  color='primary'
-                  onClick={() => (window.location.href = '/onboarding')}
-                >
-                  Join Ride
-                </Button>
-              )
+              ) : null // Do not display anything if the user has already requested or is a passenger
             ) : (
               <Button
                 variant='contained'

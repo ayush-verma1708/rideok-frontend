@@ -1,44 +1,106 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
   Typography,
   Button,
-  Grid2,
+  Grid,
   List,
   ListItem,
   ListItemText,
+  Box,
+  Paper,
+  Divider,
+  Chip,
+  CircularProgress,
 } from '@mui/material';
-import UpdateRide from '../ridesAndDetails/UpdateRide'; // Make sure the correct path is used for your UpdateRide component
+import UpdateRide from '../ridesAndDetails/UpdateRide';
 import DeleteRide from '../ridesAndDetails/DeleteRide';
 import PassengerRideInfo from '../ridesAndDetails/PassengerRide';
+import { getUserById } from '../../api/userApi'; // Assuming this API is available
 
 const DriverRideInfo = ({ ride, onStartRide, onEndRide }) => {
-  const [isManagingRide, setIsManagingRide] = useState(false); // State to toggle Manage Ride form
+  const [isManagingRide, setIsManagingRide] = useState(false); // Toggle the UpdateRide form visibility
+  const [passengerNames, setPassengerNames] = useState({}); // To store passenger names by userId
+  const [loading, setLoading] = useState(false); // To manage loading state
 
   const handleManageRideClick = () => {
-    setIsManagingRide(!isManagingRide); // Toggle the visibility of UpdateRide component
+    setIsManagingRide(!isManagingRide); // Toggle the visibility of the update ride form
   };
+
+  // Fetch passenger names in parallel using Promise.all
+  useEffect(() => {
+    const fetchPassengerNames = async () => {
+      setLoading(true);
+      try {
+        // Create an array of promises to fetch user data for each passenger
+        const promises = ride.passengers.map((passenger) =>
+          getUserById(passenger.user).then((user) => ({
+            userId: passenger.user,
+            name: user.name,
+          }))
+        );
+
+        // Wait for all promises to resolve
+        const results = await Promise.all(promises);
+
+        // Create a map of userId to name
+        const names = results.reduce((acc, { userId, name }) => {
+          acc[userId] = name;
+          return acc;
+        }, {});
+
+        setPassengerNames(names); // Update the state with the fetched names
+      } catch (error) {
+        console.error('Error fetching passenger names:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (ride.passengers.length > 0) {
+      fetchPassengerNames();
+    }
+  }, [ride.passengers]);
 
   return (
     <Card
-      sx={{ boxShadow: 3, borderRadius: 2, maxWidth: 500, margin: '20px auto' }}
+      sx={{
+        boxShadow: 3,
+        borderRadius: 2,
+        maxWidth: 700,
+        margin: '20px auto',
+        padding: 3,
+      }}
     >
       <CardContent>
-        <Typography variant='h6' align='center' gutterBottom>
-          <strong>Your Ride</strong>
+        {/* Title */}
+        <Typography
+          variant='h5'
+          align='center'
+          gutterBottom
+          sx={{ fontWeight: 'bold', marginBottom: '16px' }}
+        >
+          Your Ride Details
         </Typography>
 
-        <Grid2 container spacing={2}>
-          {/* Ride Info */}
-          <Grid2 item xs={12}>
-            <Typography variant='body1' align='center'>
-              <strong>You're the driver for this ride.</strong>
-            </Typography>
-          </Grid2>
+        {/* Driver Info */}
+        <Box sx={{ mb: 3, textAlign: 'center' }}>
+          <Chip label="You're the Driver" color='primary' variant='filled' />
+        </Box>
 
+        {/* View Passengers Section */}
+        <Paper sx={{ p: 2, mb: 3, backgroundColor: '#f9f9f9' }}>
+          <Typography variant='h6' sx={{ mb: 2 }}>
+            Passenger Information
+          </Typography>
+          <PassengerRideInfo rideId={ride._id} />
+        </Paper>
+
+        {/* Ride Management Section */}
+        <Grid container spacing={2} sx={{ mb: 3 }}>
           {/* Manage Ride Button */}
-          <Grid2 item xs={12}>
+          <Grid item xs={12} sm={6}>
             <Button
               variant='contained'
               fullWidth
@@ -50,11 +112,11 @@ const DriverRideInfo = ({ ride, onStartRide, onEndRide }) => {
             >
               {isManagingRide ? 'Cancel Edit' : 'Edit Ride'}
             </Button>
-          </Grid2>
+          </Grid>
 
-          {/* Start/End Ride Buttons */}
+          {/* Ride Status Actions */}
           {ride.rideStatus === 'Scheduled' && (
-            <Grid2 item xs={12}>
+            <Grid item xs={12} sm={6}>
               <Button
                 variant='contained'
                 fullWidth
@@ -66,10 +128,10 @@ const DriverRideInfo = ({ ride, onStartRide, onEndRide }) => {
               >
                 Start Ride
               </Button>
-            </Grid2>
+            </Grid>
           )}
           {ride.rideStatus === 'In Progress' && (
-            <Grid2 item xs={12}>
+            <Grid item xs={12} sm={6}>
               <Button
                 variant='contained'
                 fullWidth
@@ -81,31 +143,30 @@ const DriverRideInfo = ({ ride, onStartRide, onEndRide }) => {
               >
                 End Ride
               </Button>
-            </Grid2>
+            </Grid>
           )}
 
-          {/* View Passengers */}
-          <Grid2 item xs={12}>
-            <PassengerRideInfo rideId={ride._id} />
-          </Grid2>
-
           {/* Cancel Ride */}
-          <Grid2 item xs={12}>
+          <Grid item xs={12} sm={6}>
             <DeleteRide rideId={ride._id} />
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
 
         {/* Passengers List */}
-        <Typography variant='body1' sx={{ marginTop: 3, fontWeight: 'bold' }}>
+        <Typography variant='body1' sx={{ fontWeight: 'bold', mb: 1 }}>
           Passengers:
         </Typography>
         <List>
-          {ride.passengers.length > 0 ? (
+          {loading ? (
+            <CircularProgress />
+          ) : ride.passengers.length > 0 ? (
             ride.passengers.map((passenger, index) => (
               <ListItem key={index} sx={{ borderBottom: '1px solid #ddd' }}>
                 <ListItemText
-                  primary={`User: ${passenger.user}, Location: ${passenger.location}`}
-                  secondary={`Phone: ${passenger.phoneNumber}, Approval: ${
+                  primary={`User: ${
+                    passengerNames[passenger.user] || 'No Name Found'
+                  }, Location: ${passenger.location}`}
+                  secondary={`Phone: ${passenger.phoneNumber}, Status: ${
                     passenger.approval ? 'Approved' : 'Pending'
                   }`}
                 />
@@ -127,52 +188,97 @@ const DriverRideInfo = ({ ride, onStartRide, onEndRide }) => {
 
 export default DriverRideInfo;
 
-// import React, { useState } from 'react';
+// import React, { useEffect, useState } from 'react';
 // import {
 //   Card,
 //   CardContent,
 //   Typography,
 //   Button,
-//   Grid2,
+//   Grid,
 //   List,
 //   ListItem,
 //   ListItemText,
+//   Box,
+//   Paper,
+//   Divider,
+//   Chip,
+//   CircularProgress,
 // } from '@mui/material';
-// import UpdateRide from '../ridesAndDetails/UpdateRide'; // Make sure the correct path is used for your UpdateRide component
+// import UpdateRide from '../ridesAndDetails/UpdateRide';
+// import DeleteRide from '../ridesAndDetails/DeleteRide';
+// import PassengerRideInfo from '../ridesAndDetails/PassengerRide';
+// import { getUserById } from '../../api/userApi'; // Assuming this API is available
 
-// const DriverRideInfo = ({
-//   ride,
-//   onManageRide,
-//   onCancelRide,
-//   onStartRide,
-//   onEndRide,
-//   onViewPassengers,
-// }) => {
-//   const [isManagingRide, setIsManagingRide] = useState(false); // State to toggle Manage Ride form
+// const DriverRideInfo = ({ ride, onStartRide, onEndRide }) => {
+//   const [isManagingRide, setIsManagingRide] = useState(false); // Toggle the UpdateRide form visibility
+//   const [passengerNames, setPassengerNames] = useState({}); // To store passenger names by userId
+//   const [loading, setLoading] = useState(false); // To manage loading state
 
 //   const handleManageRideClick = () => {
-//     setIsManagingRide(true); // Show UpdateRide component
+//     setIsManagingRide(!isManagingRide); // Toggle the visibility of the update ride form
 //   };
+
+//   // Fetch passenger names
+//   useEffect(() => {
+//     const fetchPassengerNames = async () => {
+//       setLoading(true);
+//       try {
+//         const names = {};
+//         for (let passenger of ride.passengers) {
+//           const user = await getUserById(passenger.userId); // Fetch user data by userId
+//           names[passenger.userId] = user.name; // Store the name by userId
+//         }
+//         setPassengerNames(names);
+//       } catch (error) {
+//         console.error('Error fetching passenger names:', error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     if (ride.passengers.length > 0) {
+//       fetchPassengerNames();
+//     }
+//   }, [ride.passengers]);
 
 //   return (
 //     <Card
-//       sx={{ boxShadow: 3, borderRadius: 2, maxWidth: 500, margin: '20px auto' }}
+//       sx={{
+//         boxShadow: 3,
+//         borderRadius: 2,
+//         maxWidth: 700,
+//         margin: '20px auto',
+//         padding: 3,
+//       }}
 //     >
 //       <CardContent>
-//         <Typography variant='h6' align='center' gutterBottom>
-//           <strong>Your Ride</strong>
+//         {/* Title */}
+//         <Typography
+//           variant='h5'
+//           align='center'
+//           gutterBottom
+//           sx={{ fontWeight: 'bold', marginBottom: '16px' }}
+//         >
+//           Your Ride Details
 //         </Typography>
 
-//         <Grid2 container spacing={2}>
-//           {/* Ride Info */}
-//           <Grid2 item xs={12}>
-//             <Typography variant='body1' align='center'>
-//               <strong>You're the driver for this ride.</strong>
-//             </Typography>
-//           </Grid2>
+//         {/* Driver Info */}
+//         <Box sx={{ mb: 3, textAlign: 'center' }}>
+//           <Chip label="You're the Driver" color='primary' variant='filled' />
+//         </Box>
 
+//         {/* View Passengers Section */}
+//         <Paper sx={{ p: 2, mb: 3, backgroundColor: '#f9f9f9' }}>
+//           <Typography variant='h6' sx={{ mb: 2 }}>
+//             Passenger Information
+//           </Typography>
+//           <PassengerRideInfo rideId={ride._id} />
+//         </Paper>
+
+//         {/* Ride Management Section */}
+//         <Grid container spacing={2} sx={{ mb: 3 }}>
 //           {/* Manage Ride Button */}
-//           <Grid2 item xs={12}>
+//           <Grid item xs={12} sm={6}>
 //             <Button
 //               variant='contained'
 //               fullWidth
@@ -182,13 +288,13 @@ export default DriverRideInfo;
 //                 '&:hover': { backgroundColor: '#0056b3' },
 //               }}
 //             >
-//               Manage Ride
+//               {isManagingRide ? 'Cancel Edit' : 'Edit Ride'}
 //             </Button>
-//           </Grid2>
+//           </Grid>
 
-//           {/* Start/End Ride Buttons */}
+//           {/* Ride Status Actions */}
 //           {ride.rideStatus === 'Scheduled' && (
-//             <Grid2 item xs={12}>
+//             <Grid item xs={12} sm={6}>
 //               <Button
 //                 variant='contained'
 //                 fullWidth
@@ -200,10 +306,10 @@ export default DriverRideInfo;
 //               >
 //                 Start Ride
 //               </Button>
-//             </Grid2>
+//             </Grid>
 //           )}
 //           {ride.rideStatus === 'In Progress' && (
-//             <Grid2 item xs={12}>
+//             <Grid item xs={12} sm={6}>
 //               <Button
 //                 variant='contained'
 //                 fullWidth
@@ -215,50 +321,33 @@ export default DriverRideInfo;
 //               >
 //                 End Ride
 //               </Button>
-//             </Grid2>
+//             </Grid>
 //           )}
 
-//           {/* View Passengers */}
-//           <Grid2 item xs={12}>
-//             <Button
-//               variant='outlined'
-//               fullWidth
-//               onClick={onViewPassengers}
-//               sx={{
-//                 borderColor: '#17a2b8',
-//                 color: '#17a2b8',
-//                 '&:hover': { backgroundColor: '#17a2b8', color: 'white' },
-//               }}
-//             >
-//               View Passengers
-//             </Button>
-//           </Grid2>
-
 //           {/* Cancel Ride */}
-//           <Grid2 item xs={12}>
-//             <Button
-//               variant='contained'
-//               fullWidth
-//               onClick={onCancelRide}
-//               sx={{
-//                 backgroundColor: '#dc3545',
-//                 '&:hover': { backgroundColor: '#c82333' },
-//               }}
-//             >
-//               Cancel Ride
-//             </Button>
-//           </Grid2>
-//         </Grid2>
+//           <Grid item xs={12} sm={6}>
+//             <DeleteRide rideId={ride._id} />
+//           </Grid>
+//         </Grid>
 
 //         {/* Passengers List */}
-//         <Typography variant='body1' sx={{ marginTop: 3, fontWeight: 'bold' }}>
+//         <Typography variant='body1' sx={{ fontWeight: 'bold', mb: 1 }}>
 //           Passengers:
 //         </Typography>
 //         <List>
-//           {ride.passengers.length > 0 ? (
+//           {loading ? (
+//             <CircularProgress />
+//           ) : ride.passengers.length > 0 ? (
 //             ride.passengers.map((passenger, index) => (
 //               <ListItem key={index} sx={{ borderBottom: '1px solid #ddd' }}>
-//                 <ListItemText primary={passenger} />
+//                 <ListItemText
+//                   primary={`User: ${
+//                     passengerNames[passenger.userId] || 'Loading...'
+//                   }, Location: ${passenger.location}`}
+//                   secondary={`Phone: ${passenger.phoneNumber}, Approval: ${
+//                     passenger.approval ? 'Approved' : 'Pending'
+//                   }`}
+//                 />
 //               </ListItem>
 //             ))
 //           ) : (
@@ -277,306 +366,149 @@ export default DriverRideInfo;
 
 // export default DriverRideInfo;
 
-// import React from 'react';
-// import {
-//   Card,
-//   CardContent,
-//   Typography,
-//   Button,
-//   Grid2,
-//   List,
-//   ListItem,
-//   ListItemText,
-// } from '@mui/material';
+// // import React, { useState } from 'react';
+// // import {
+// //   Card,
+// //   CardContent,
+// //   Typography,
+// //   Button,
+// //   Grid,
+// //   List,
+// //   ListItem,
+// //   ListItemText,
+// //   Box,
+// //   Paper,
+// //   Divider,
+// //   Chip,
+// // } from '@mui/material';
+// // import UpdateRide from '../ridesAndDetails/UpdateRide';
+// // import DeleteRide from '../ridesAndDetails/DeleteRide';
+// // import PassengerRideInfo from '../ridesAndDetails/PassengerRide';
 
-// const DriverRideInfo = ({
-//   ride,
-//   onManageRide,
-//   onCancelRide,
-//   onStartRide,
-//   onEndRide,
-//   onViewPassengers,
-// }) => {
-//   return (
-//     <Card
-//       sx={{ boxShadow: 3, borderRadius: 2, maxWidth: 500, margin: '20px auto' }}
-//     >
-//       <CardContent>
-//         <Typography variant='h6' align='center' gutterBottom>
-//           <strong>Your Ride</strong>
-//         </Typography>
+// // const DriverRideInfo = ({ ride, onStartRide, onEndRide }) => {
+// //   const [isManagingRide, setIsManagingRide] = useState(false); // Toggle the UpdateRide form visibility
 
-//         <Grid2 container spacing={2}>
-//           {/* Ride Info */}
-//           <Grid2 item xs={12}>
-//             <Typography variant='body1' align='center'>
-//               <strong>You're the driver for this ride.</strong>
-//             </Typography>
-//           </Grid2>
+// //   const handleManageRideClick = () => {
+// //     setIsManagingRide(!isManagingRide); // Toggle the visibility of the update ride form
+// //   };
 
-//           {/* Manage Ride Button */}
-//           <Grid2 item xs={12}>
-//             <Button
-//               variant='contained'
-//               fullWidth
-//               onClick={onManageRide}
-//               sx={{
-//                 backgroundColor: '#007bff',
-//                 '&:hover': { backgroundColor: '#0056b3' },
-//               }}
-//             >
-//               Manage Ride
-//             </Button>
-//           </Grid2>
-
-//           {/* Start/End Ride Buttons */}
-//           {ride.rideStatus === 'Scheduled' && (
-//             <Grid2 item xs={12}>
-//               <Button
-//                 variant='contained'
-//                 fullWidth
-//                 onClick={onStartRide}
-//                 sx={{
-//                   backgroundColor: '#28a745',
-//                   '&:hover': { backgroundColor: '#218838' },
-//                 }}
-//               >
-//                 Start Ride
-//               </Button>
-//             </Grid2>
-//           )}
-//           {ride.rideStatus === 'In Progress' && (
-//             <Grid2 item xs={12}>
-//               <Button
-//                 variant='contained'
-//                 fullWidth
-//                 onClick={onEndRide}
-//                 sx={{
-//                   backgroundColor: '#ffc107',
-//                   '&:hover': { backgroundColor: '#e0a800' },
-//                 }}
-//               >
-//                 End Ride
-//               </Button>
-//             </Grid2>
-//           )}
-
-//           {/* View Passengers */}
-//           <Grid2 item xs={12}>
-//             <Button
-//               variant='outlined'
-//               fullWidth
-//               onClick={onViewPassengers}
-//               sx={{
-//                 borderColor: '#17a2b8',
-//                 color: '#17a2b8',
-//                 '&:hover': { backgroundColor: '#17a2b8', color: 'white' },
-//               }}
-//             >
-//               View Passengers
-//             </Button>
-//           </Grid2>
-
-//           {/* Cancel Ride */}
-//           <Grid2 item xs={12}>
-//             <Button
-//               variant='contained'
-//               fullWidth
-//               onClick={onCancelRide}
-//               sx={{
-//                 backgroundColor: '#dc3545',
-//                 '&:hover': { backgroundColor: '#c82333' },
-//               }}
-//             >
-//               Cancel Ride
-//             </Button>
-//           </Grid2>
-//         </Grid2>
-
-//         {/* Passengers List */}
-//         <Typography variant='body1' sx={{ marginTop: 3, fontWeight: 'bold' }}>
-//           Passengers:
-//         </Typography>
-//         <List>
-//           {ride.passengers.length > 0 ? (
-//             ride.passengers.map((passenger, index) => (
-//               <ListItem key={index} sx={{ borderBottom: '1px solid #ddd' }}>
-//                 <ListItemText primary={passenger} />
-//               </ListItem>
-//             ))
-//           ) : (
-//             <ListItem>
-//               <ListItemText primary='No passengers yet' />
-//             </ListItem>
-//           )}
-//         </List>
-//       </CardContent>
-//     </Card>
-//   );
-// };
-
-// export default DriverRideInfo;
-
-// // import React from 'react';
-// // import { Card, Button, ListGroup, Col, Row } from 'react-bootstrap';
-
-// // const DriverRideInfo = ({
-// //   ride,
-// //   onManageRide,
-// //   onCancelRide,
-// //   onStartRide,
-// //   onEndRide,
-// //   onViewPassengers,
-// // }) => {
 // //   return (
-// //     <Card className='shadow-sm rounded p-4'>
-// //       <Card.Body>
-// //         <Card.Title className='text-center mb-4'>
-// //           <strong>Your Ride</strong>
-// //         </Card.Title>
-
-// //         {/* Ride Info Section */}
-// //         <Row className='mb-3'>
-// //           <Col>
-// //             <Card.Text className='text-center'>
-// //               <strong>You're the driver for this ride.</strong>
-// //             </Card.Text>
-// //           </Col>
-// //         </Row>
-
-// //         {/* Manage Ride */}
-// //         <Button
-// //           variant='primary'
-// //           className='w-100 mb-2'
-// //           onClick={onManageRide}
-// //           style={{ backgroundColor: '#007bff', borderColor: '#007bff' }}
+// //     <Card
+// //       sx={{
+// //         boxShadow: 3,
+// //         borderRadius: 2,
+// //         maxWidth: 700,
+// //         margin: '20px auto',
+// //         padding: 3,
+// //       }}
+// //     >
+// //       <CardContent>
+// //         {/* Title */}
+// //         <Typography
+// //           variant='h5'
+// //           align='center'
+// //           gutterBottom
+// //           sx={{ fontWeight: 'bold' }}
 // //         >
-// //           Manage Ride
-// //         </Button>
+// //           Your Ride Details
+// //         </Typography>
 
-// //         {/* Start/End Ride Buttons */}
-// //         {ride.rideStatus === 'Scheduled' && (
-// //           <Button
-// //             variant='success'
-// //             className='w-100 mb-2'
-// //             onClick={onStartRide}
-// //             style={{ backgroundColor: '#28a745', borderColor: '#28a745' }}
-// //           >
-// //             Start Ride
-// //           </Button>
-// //         )}
+// //         {/* Driver Info */}
+// //         <Box sx={{ mb: 3, textAlign: 'center' }}>
+// //           <Chip label="You're the Driver" color='primary' variant='filled' />
+// //         </Box>
 
-// //         {ride.rideStatus === 'In Progress' && (
-// //           <Button
-// //             variant='warning'
-// //             className='w-100 mb-2'
-// //             onClick={onEndRide}
-// //             style={{ backgroundColor: '#ffc107', borderColor: '#ffc107' }}
-// //           >
-// //             End Ride
-// //           </Button>
-// //         )}
+// //         {/* View Passengers Section */}
+// //         <Paper sx={{ p: 2, mb: 3, backgroundColor: '#f9f9f9' }}>
+// //           <Typography variant='h6' sx={{ mb: 2 }}>
+// //             Passenger Information
+// //           </Typography>
+// //           <PassengerRideInfo rideId={ride._id} />
+// //         </Paper>
 
-// //         {/* View Passengers */}
-// //         <Button
-// //           variant='info'
-// //           className='w-100 mb-2'
-// //           onClick={onViewPassengers}
-// //           style={{ backgroundColor: '#17a2b8', borderColor: '#17a2b8' }}
-// //         >
-// //           View Passengers
-// //         </Button>
+// //         {/* Ride Management Section */}
+// //         <Grid container spacing={2} sx={{ mb: 3 }}>
+// //           {/* Manage Ride Button */}
+// //           <Grid item xs={12} sm={6}>
+// //             <Button
+// //               variant='contained'
+// //               fullWidth
+// //               onClick={handleManageRideClick}
+// //               sx={{
+// //                 backgroundColor: '#007bff',
+// //                 '&:hover': { backgroundColor: '#0056b3' },
+// //               }}
+// //             >
+// //               {isManagingRide ? 'Cancel Edit' : 'Edit Ride'}
+// //             </Button>
+// //           </Grid>
 
-// //         {/* Cancel Ride */}
-// //         <Button
-// //           variant='danger'
-// //           className='w-100 mb-2'
-// //           onClick={onCancelRide}
-// //           style={{ backgroundColor: '#dc3545', borderColor: '#dc3545' }}
-// //         >
-// //           Cancel Ride
-// //         </Button>
+// //           {/* Ride Status Actions */}
+// //           {ride.rideStatus === 'Scheduled' && (
+// //             <Grid item xs={12} sm={6}>
+// //               <Button
+// //                 variant='contained'
+// //                 fullWidth
+// //                 onClick={onStartRide}
+// //                 sx={{
+// //                   backgroundColor: '#28a745',
+// //                   '&:hover': { backgroundColor: '#218838' },
+// //                 }}
+// //               >
+// //                 Start Ride
+// //               </Button>
+// //             </Grid>
+// //           )}
+// //           {ride.rideStatus === 'In Progress' && (
+// //             <Grid item xs={12} sm={6}>
+// //               <Button
+// //                 variant='contained'
+// //                 fullWidth
+// //                 onClick={onEndRide}
+// //                 sx={{
+// //                   backgroundColor: '#ffc107',
+// //                   '&:hover': { backgroundColor: '#e0a800' },
+// //                 }}
+// //               >
+// //                 End Ride
+// //               </Button>
+// //             </Grid>
+// //           )}
+
+// //           {/* Cancel Ride */}
+// //           <Grid item xs={12} sm={6}>
+// //             <DeleteRide rideId={ride._id} />
+// //           </Grid>
+// //         </Grid>
 
 // //         {/* Passengers List */}
-// //         <Card.Text className='mt-3'>
-// //           <strong>Passengers:</strong>
-// //         </Card.Text>
-// //         <ListGroup>
+// //         <Typography variant='body1' sx={{ fontWeight: 'bold', mb: 1 }}>
+// //           Passengers:
+// //         </Typography>
+// //         <List>
 // //           {ride.passengers.length > 0 ? (
 // //             ride.passengers.map((passenger, index) => (
-// //               <ListGroup.Item key={index}>{passenger}</ListGroup.Item>
+// //               <ListItem key={index} sx={{ borderBottom: '1px solid #ddd' }}>
+// //                 <ListItemText
+// //                   primary={`User: ${passenger.user}, Location: ${passenger.location}`}
+// //                   secondary={`Phone: ${passenger.phoneNumber}, Approval: ${
+// //                     passenger.approval ? 'Approved' : 'Pending'
+// //                   }`}
+// //                 />
+// //               </ListItem>
 // //             ))
 // //           ) : (
-// //             <ListGroup.Item>No passengers yet</ListGroup.Item>
+// //             <ListItem>
+// //               <ListItemText primary='No passengers yet' />
+// //             </ListItem>
 // //           )}
-// //         </ListGroup>
-// //       </Card.Body>
+// //         </List>
+
+// //         {/* Display UpdateRide component if managing ride */}
+// //         {isManagingRide && <UpdateRide rideId={ride._id} />}
+// //       </CardContent>
 // //     </Card>
 // //   );
 // // };
 
 // // export default DriverRideInfo;
-
-// // // // import React from 'react';
-// // // // import { Card, Button, ListGroup } from 'react-bootstrap';
-
-// // // // const DriverRideInfo = ({
-// // // //   ride,
-// // // //   onManageRide,
-// // // //   onCancelRide,
-// // // //   onStartRide,
-// // // //   onEndRide,
-// // // //   onViewPassengers,
-// // // // }) => {
-// // // //   return (
-// // // //     <>
-// // // //       <Card.Text>
-// // // //         <strong>Your Ride:</strong> You're the driver for this ride.
-// // // //       </Card.Text>
-
-// // // //       {/* Manage Ride */}
-// // // //       <Button variant='secondary' className='w-100' onClick={onManageRide}>
-// // // //         Manage Ride
-// // // //       </Button>
-
-// // // //       {/* Start/End Ride */}
-// // // //       {ride.rideStatus === 'Scheduled' && (
-// // // //         <Button variant='primary' className='w-100 mt-2' onClick={onStartRide}>
-// // // //           Start Ride
-// // // //         </Button>
-// // // //       )}
-
-// // // //       {ride.rideStatus === 'In Progress' && (
-// // // //         <Button variant='success' className='w-100 mt-2' onClick={onEndRide}>
-// // // //           End Ride
-// // // //         </Button>
-// // // //       )}
-
-// // // //       {/* View Passengers */}
-// // // //       <Button variant='info' className='w-100 mt-2' onClick={onViewPassengers}>
-// // // //         View Passengers
-// // // //       </Button>
-
-// // // //       {/* Cancel Ride */}
-// // // //       <Button variant='danger' className='w-100 mt-2' onClick={onCancelRide}>
-// // // //         Cancel Ride
-// // // //       </Button>
-
-// // // //       {/* Optional: List of passengers for better clarity */}
-// // // //       <Card.Text className='mt-3'>
-// // // //         <strong>Passengers:</strong>
-// // // //       </Card.Text>
-// // // //       <ListGroup>
-// // // //         {ride.passengers.length > 0 ? (
-// // // //           ride.passengers.map((passenger, index) => (
-// // // //             <ListGroup.Item key={index}>{passenger}</ListGroup.Item>
-// // // //           ))
-// // // //         ) : (
-// // // //           <ListGroup.Item>No passengers yet</ListGroup.Item>
-// // // //         )}
-// // // //       </ListGroup>
-// // // //     </>
-// // // //   );
-// // // // };
-
-// // // // export default DriverRideInfo;
