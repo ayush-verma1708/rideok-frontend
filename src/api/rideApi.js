@@ -1,13 +1,12 @@
 import axios from 'axios';
-
-const API_URL = 'https://rideok-backend.onrender.com/api/rides'; // Adjust based on your backend server URL
+import API_URL from './baseApi';
 
 // Get the user token from localStorage
 const getToken = () => localStorage.getItem('token');
 
 // 1. Create a Ride
 export const createRide = async (rideData) => {
-  const response = await axios.post(`${API_URL}/create`, rideData, {
+  const response = await axios.post(`${API_URL}/rides/create`, rideData, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${getToken()}`,
@@ -19,7 +18,7 @@ export const createRide = async (rideData) => {
 // 2. Search for Rides
 export const searchRides = async (startLocation, endLocation) => {
   const response = await axios.get(
-    `${API_URL}/search?startLocation=${startLocation}&endLocation=${endLocation}`
+    `${API_URL}/rides/search?startLocation=${startLocation}&endLocation=${endLocation}`
   );
   return response.data;
 };
@@ -27,7 +26,7 @@ export const searchRides = async (startLocation, endLocation) => {
 // 3. Book a Ride
 export const bookRide = async (rideId) => {
   const response = await axios.post(
-    `${API_URL}/book/${rideId}`,
+    `${API_URL}/rides/book/${rideId}`,
     {},
     {
       headers: {
@@ -41,42 +40,34 @@ export const bookRide = async (rideId) => {
 
 // 4. Update a Ride (driver only)
 export const updateRide = async (rideId, updatedData) => {
-  const response = await axios.put(`${API_URL}/update/${rideId}`, updatedData, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${getToken()}`,
-    },
-  });
+  const response = await axios.put(
+    `${API_URL}/rides/update/${rideId}`,
+    updatedData,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+      },
+    }
+  );
   return response.data;
 };
 
-// 5. Delete a Ride (driver only)
-// export const deleteRide = async (rideId) => {
-//   const response = await axios.delete(`${API_URL}/delete/${rideId}`, {
-//     headers: {
-//       'Content-Type': 'application/json',
-//       Authorization: `Bearer ${getToken()}`,
-//     },
-//   });
-//   return response.data;
-// };
-
-// 6. Get Ride Details
 export const getRideDetails = async (rideId) => {
-  const response = await axios.get(`${API_URL}/rideId/${rideId}`);
+  const response = await axios.get(`${API_URL}/rides/rideId/${rideId}`);
   return response.data;
 };
 
 // 7. Get All Rides
 export const getAllRides = async () => {
-  const response = await axios.get(`${API_URL}`);
+  const response = await axios.get(`${API_URL}/rides`);
   return response.data;
 };
 
 // 8. Get My Rides
 export const getMyRides = async () => {
   try {
-    const response = await axios.get(`${API_URL}/user-rides`, {
+    const response = await axios.get(`${API_URL}/rides/user-rides`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${getToken()}`,
@@ -102,7 +93,7 @@ export const getMyRides = async () => {
 export const handleRideRequest = async (rideId, action, passengerId) => {
   try {
     // API call to the backend
-    const response = await axios.post(`${API_URL}/handle-request`, {
+    const response = await axios.post(`${API_URL}/rides/handle-request`, {
       rideId,
       action,
       passengerId,

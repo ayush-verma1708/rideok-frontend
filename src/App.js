@@ -7,6 +7,8 @@ import RideManagementPage from './pages/rideManagementPage.js';
 import CreateRidePage from './pages/CreateRidePage.js';
 import MyRidesPage from './pages/MyRidesPage.js';
 import RideInfo from './pages/RideInfoPage.js';
+import CreateUserProfile from './pages/CreateUserProfile.js';
+
 import {
   AuthProvider,
   useAuth,
@@ -26,6 +28,7 @@ const App = () => {
             element={<RideManagementPageWithUser />}
           />
           <Route path='/create-ride' element={<CreateRidePageWithUser />} />
+          <Route path='/create-user-profile' element={<CreateUserProfile />} />
           <Route path='/my-rides' element={<MyRidesPageWithUser />} />
           <Route path='/ride/:id' element={<RideInfoWithUser />} />
           <Route path='/about-us' element={<AboutUs />} />

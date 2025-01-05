@@ -41,7 +41,14 @@ const Onboarding = () => {
                 </div>
               ) : (
                 <div>
-                  <Register />
+                  <button
+                    className='onboarding-button'
+                    onClick={() =>
+                      window.open('/create-user-profile', '_blank')
+                    }
+                  >
+                    Create a new User Profile
+                  </button>
                 </div>
               )}
             </Card>
